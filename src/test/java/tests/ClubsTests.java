@@ -15,16 +15,27 @@ public class ClubsTests extends TestBase {
         assertThat(response).isNotNull();
         assertThat(response.count()).isGreaterThanOrEqualTo(0);
         assertThat(response.results()).isNotNull();
-        assertThat(response.results()).hasSize(response.count());
+        assertThat(response.results())
+                .as("на одной странице не может быть больше клубов, чем count")
+                .hasSizeLessThanOrEqualTo(response.count());
+        if (response.count() > 0) {
+            assertThat(response.results()).isNotEmpty();
+        }
     }
 
     @Test
-    public void getClubsCountMatchesResultsSize() {
+    public void getClubsPaginationWhenTotalExceedsPageSize() {
         ClubsListResponseModel response = api.clubs.getClubs();
 
         assertThat(response.results())
-                .as("count должно совпадать с размером results")
-                .hasSize(response.count());
+                .as("размер results не может превышать общий count")
+                .hasSizeLessThanOrEqualTo(response.count());
+
+        if (response.count() > response.results().size()) {
+            assertThat(response.next())
+                    .as("если клубов больше, чем на странице, должна быть ссылка next")
+                    .isNotNull();
+        }
     }
 
     @Test
@@ -50,7 +61,7 @@ public class ClubsTests extends TestBase {
         ClubsListResponseModel response = api.clubs.getClubs();
 
         assertThat(response.count()).isNotNull();
-        // next и previous могут быть null при одной странице
         assertThat(response.results()).isNotNull();
+        assertThat(response.results()).hasSizeLessThanOrEqualTo(response.count());
     }
 }

@@ -1,8 +1,10 @@
 package tests;
 
 import models.login.LoginBodyModel;
+import models.login.LoginValidationErrorResponseModel;
 import models.login.SuccessfulLoginResponseModel;
 import models.login.WrongCredentialsLoginResponseModel;
+import models.registration.RegistrationBodyModel;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -12,7 +14,11 @@ public class LoginTests extends TestBase {
 
     @Test
     public void successfulLoginTest() {
-        LoginBodyModel loginData = new LoginBodyModel(LOGIN_USERNAME, LOGIN_PASSWORD);
+        String username = "user_" + System.currentTimeMillis();
+        String password = "pass_" + System.currentTimeMillis();
+        api.users.register(new RegistrationBodyModel(username, password));
+
+        LoginBodyModel loginData = new LoginBodyModel(username, password);
 
         SuccessfulLoginResponseModel loginResponse = api.auth.login(loginData);
 
@@ -29,11 +35,34 @@ public class LoginTests extends TestBase {
 
         WrongCredentialsLoginResponseModel loginResponse = api.auth.loginWrongCredentials(loginData);
 
-        String expectedDetailError = LOGIN_WRONG_CREDENTIALS_ERROR;
-        String actualDetailError = loginResponse.detail();
-        assertThat(actualDetailError).isEqualTo(expectedDetailError);
+        assertThat(loginResponse.detail()).isEqualTo(LOGIN_WRONG_CREDENTIALS_ERROR);
     }
 
-    // todo add more negative tests
+    @Test
+    public void wrongUsernameLoginTest() {
+        LoginBodyModel loginData = new LoginBodyModel(LOGIN_WRONG_USERNAME, LOGIN_PASSWORD);
+
+        WrongCredentialsLoginResponseModel loginResponse = api.auth.loginWrongCredentials(loginData);
+
+        assertThat(loginResponse.detail()).isEqualTo(LOGIN_WRONG_CREDENTIALS_ERROR);
+    }
+
+    @Test
+    public void emptyUsernameLoginTest() {
+        LoginBodyModel loginData = new LoginBodyModel("", LOGIN_PASSWORD);
+
+        LoginValidationErrorResponseModel loginResponse = api.auth.loginWithValidationError(loginData);
+
+        assertThat(loginResponse.username()).containsExactly(LOGIN_BLANK_FIELD_ERROR);
+    }
+
+    @Test
+    public void emptyPasswordLoginTest() {
+        LoginBodyModel loginData = new LoginBodyModel(LOGIN_USERNAME, "");
+
+        LoginValidationErrorResponseModel loginResponse = api.auth.loginWithValidationError(loginData);
+
+        assertThat(loginResponse.password()).containsExactly(LOGIN_BLANK_FIELD_ERROR);
+    }
 
 }

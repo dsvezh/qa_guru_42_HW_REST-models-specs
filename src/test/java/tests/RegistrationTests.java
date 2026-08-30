@@ -2,11 +2,13 @@ package tests;
 
 import models.registration.ExistingUserResponseModel;
 import models.registration.RegistrationBodyModel;
+import models.registration.RegistrationValidationErrorResponseModel;
 import models.registration.SuccessfulRegistrationResponseModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static tests.TestData.REGISTRATION_BLANK_FIELD_ERROR;
 import static tests.TestData.REGISTRATION_EXISTING_USER_ERROR;
 import static tests.TestData.REGISTRATION_IP_REGEXP;
 
@@ -55,6 +57,34 @@ public class RegistrationTests extends TestBase {
         assertThat(actualError).isEqualTo(expectedError);
     }
 
-    // todo add more negative tests
+    @Test
+    public void emptyUsernameRegistrationTest() {
+        RegistrationBodyModel registrationData = new RegistrationBodyModel("", password);
 
+        RegistrationValidationErrorResponseModel registrationResponse =
+                api.users.registerWithValidationError(registrationData);
+
+        assertThat(registrationResponse.username()).containsExactly(REGISTRATION_BLANK_FIELD_ERROR);
+    }
+
+    @Test
+    public void emptyPasswordRegistrationTest() {
+        RegistrationBodyModel registrationData = new RegistrationBodyModel(username, "");
+
+        RegistrationValidationErrorResponseModel registrationResponse =
+                api.users.registerWithValidationError(registrationData);
+
+        assertThat(registrationResponse.password()).containsExactly(REGISTRATION_BLANK_FIELD_ERROR);
+    }
+
+    @Test
+    public void emptyUsernameAndPasswordRegistrationTest() {
+        RegistrationBodyModel registrationData = new RegistrationBodyModel("", "");
+
+        RegistrationValidationErrorResponseModel registrationResponse =
+                api.users.registerWithValidationError(registrationData);
+
+        assertThat(registrationResponse.username()).containsExactly(REGISTRATION_BLANK_FIELD_ERROR);
+        assertThat(registrationResponse.password()).containsExactly(REGISTRATION_BLANK_FIELD_ERROR);
+    }
 }

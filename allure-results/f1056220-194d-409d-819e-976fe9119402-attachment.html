@@ -1,0 +1,56 @@
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+:root{--l:#008000;--v:#c7254e;--k:#0066cc}
+*{box-sizing:border-box}
+body{font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;margin:12px;color:#333}
+h4{margin:16px 0 8px;font-size:13px;color:#666}
+pre{margin:0;white-space:pre-wrap;word-break:break-all}
+code{font-family:ui-monospace,monospace;font-size:13px;background:#f5f5f5;padding:2px 6px;border-radius:4px}
+pre code{display:block;padding:10px;background:#f5f5f5;border-radius:4px;border:1px solid #e0e0e0}
+.hl-status,.hl-header-name{color:var(--l);font-weight:600}
+.hl-url,.hl-json-string,.hl-header-value{color:var(--v)}
+.hl-json-key{color:var(--k)}
+</style>
+</head>
+<body>
+<div><h4>Status code</h4><pre><code><span class="hl-status">401</span></code></pre></div>
+<h4>Headers</h4>
+<div><pre><code><span class="hl-header-name">X-Frame-Options</span>: <span class="hl-header-value">DENY</span></code></pre></div>
+<div><pre><code><span class="hl-header-name">Referrer-Policy</span>: <span class="hl-header-value">same-origin</span></code></pre></div>
+<div><pre><code><span class="hl-header-name">Server</span>: <span class="hl-header-value">nginx/1.24.0 (Ubuntu)</span></code></pre></div>
+<div><pre><code><span class="hl-header-name">X-Content-Type-Options</span>: <span class="hl-header-value">nosniff</span></code></pre></div>
+<div><pre><code><span class="hl-header-name">WWW-Authenticate</span>: <span class="hl-header-value">Bearer realm="api"</span></code></pre></div>
+<div><pre><code><span class="hl-header-name">Connection</span>: <span class="hl-header-value">keep-alive</span></code></pre></div>
+<div><pre><code><span class="hl-header-name">Vary</span>: <span class="hl-header-value">origin</span></code></pre></div>
+<div><pre><code><span class="hl-header-name">Cross-Origin-Opener-Policy</span>: <span class="hl-header-value">same-origin</span></code></pre></div>
+<div><pre><code><span class="hl-header-name">Content-Length</span>: <span class="hl-header-value">42</span></code></pre></div>
+<div><pre><code><span class="hl-header-name">Date</span>: <span class="hl-header-value">Sun, 30 Aug 2026 13:50:44 GMT</span></code></pre></div>
+<div><pre><code><span class="hl-header-name">Content-Type</span>: <span class="hl-header-value">application/json; charset=utf-8</span></code></pre></div>
+<div><pre><code><span class="hl-header-name">Allow</span>: <span class="hl-header-value">POST, OPTIONS</span></code></pre></div>
+<h4>Body</h4>
+<div><pre><code class="hl-json">{
+    "detail": "Invalid username or password."
+}</code></pre></div>
+<script>
+(function(){
+var e=function(s){return(s+'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')};
+function json(el){
+  var t=el.textContent,i=0,h='',s,j;
+  for(;i<t.length;i++)
+    if(t[i]==='"'){
+      s=i++;
+      while(i<t.length){if(t[i]==='\\')i+=2;else if(t[i]==='"'){i++;break;}else i++}
+      j=i;while(j<t.length&&/\s/.test(t[j]))j++;
+      h+='<span class="hl-'+(t[j]===':'?'json-key':'json-string')+'">'+e(t.slice(s,i))+'</span>';
+      i--;
+    }else h+=e(t[i]);
+  el.innerHTML=h;
+}
+var codes=document.body.querySelectorAll('code.hl-json');
+for(var i=0;i<codes.length;i++) codes[i].textContent.trim().match(/^[{[]/)&&json(codes[i]);
+})();
+</script>
+</body>
+</html>

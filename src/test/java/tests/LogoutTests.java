@@ -2,22 +2,67 @@ package tests;
 
 import models.login.LoginBodyModel;
 import models.logout.LogoutBodyModel;
+import models.logout.LogoutInvalidTokenResponseModel;
+import models.logout.LogoutValidationErrorResponseModel;
+import models.registration.RegistrationBodyModel;
 import org.junit.jupiter.api.Test;
 
-import static tests.TestData.LOGIN_PASSWORD;
-import static tests.TestData.LOGIN_USERNAME;
+import static org.assertj.core.api.Assertions.assertThat;
+import static tests.TestData.LOGOUT_BLANK_FIELD_ERROR;
+import static tests.TestData.LOGOUT_INVALID_REFRESH_TOKEN;
+import static tests.TestData.LOGOUT_INVALID_TOKEN_CODE;
+import static tests.TestData.LOGOUT_INVALID_TOKEN_ERROR;
+import static tests.TestData.LOGOUT_TOKEN_BLACKLISTED_ERROR;
 
 public class LogoutTests extends TestBase {
 
     @Test
     public void successfulLogoutTest() {
-        LoginBodyModel loginData = new LoginBodyModel(LOGIN_USERNAME, LOGIN_PASSWORD);
+        String username = "user_" + System.currentTimeMillis();
+        String password = "pass_" + System.currentTimeMillis();
+        api.users.register(new RegistrationBodyModel(username, password));
+
+        LoginBodyModel loginData = new LoginBodyModel(username, password);
         String refreshToken = api.auth.loginAndGetRefreshToken(loginData);
 
         LogoutBodyModel logoutData = new LogoutBodyModel(refreshToken);
         api.auth.logout(logoutData);
     }
 
-    // todo add more negative tests
-}
+    @Test
+    public void invalidRefreshTokenLogoutTest() {
+        LogoutBodyModel logoutData = new LogoutBodyModel(LOGOUT_INVALID_REFRESH_TOKEN);
 
+        LogoutInvalidTokenResponseModel logoutResponse = api.auth.logoutWithInvalidToken(logoutData);
+
+        assertThat(logoutResponse.detail()).isEqualTo(LOGOUT_INVALID_TOKEN_ERROR);
+        assertThat(logoutResponse.code()).isEqualTo(LOGOUT_INVALID_TOKEN_CODE);
+    }
+
+    @Test
+    public void emptyRefreshTokenLogoutTest() {
+        LogoutBodyModel logoutData = new LogoutBodyModel("");
+
+        LogoutValidationErrorResponseModel logoutResponse = api.auth.logoutWithValidationError(logoutData);
+
+        assertThat(logoutResponse.refresh()).containsExactly(LOGOUT_BLANK_FIELD_ERROR);
+    }
+
+    @Test
+    public void repeatedLogoutTest() {
+        String username = "user_" + System.currentTimeMillis();
+        String password = "pass_" + System.currentTimeMillis();
+        api.users.register(new RegistrationBodyModel(username, password));
+
+        LoginBodyModel loginData = new LoginBodyModel(username, password);
+        String refreshToken = api.auth.loginAndGetRefreshToken(loginData);
+
+        LogoutBodyModel logoutData = new LogoutBodyModel(refreshToken);
+        api.auth.logout(logoutData);
+
+        LogoutInvalidTokenResponseModel secondLogoutResponse = api.auth.logoutWithInvalidToken(logoutData);
+
+        assertThat(secondLogoutResponse.detail()).isEqualTo(LOGOUT_TOKEN_BLACKLISTED_ERROR);
+        assertThat(secondLogoutResponse.code()).isEqualTo(LOGOUT_INVALID_TOKEN_CODE);
+    }
+}
