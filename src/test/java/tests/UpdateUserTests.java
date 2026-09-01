@@ -11,6 +11,7 @@ import models.updateuser.UpdateUserPutUsernameOnlyBodyModel;
 import models.updateuser.UpdateUserValidationErrorResponseModel;
 import org.junit.jupiter.api.Test;
 
+import static io.qameta.allure.Allure.step;
 import static org.assertj.core.api.Assertions.assertThat;
 import static tests.TestData.UPDATE_USER_INVALID_TOKEN_CODE;
 import static tests.TestData.UPDATE_USER_INVALID_TOKEN_ERROR;
@@ -24,9 +25,11 @@ public class UpdateUserTests extends TestBase {
         String username = "user_" + System.currentTimeMillis();
         String password = "pass_" + System.currentTimeMillis();
         SuccessfulRegistrationResponseModel registeredUser =
-                api.users.register(new RegistrationBodyModel(username, password));
+                step("Зарегистрировать нового пользователя",
+                        () -> api.users.register(new RegistrationBodyModel(username, password)));
 
-        String accessToken = api.auth.loginAndGetAccessToken(new LoginBodyModel(username, password));
+        String accessToken = step("Авторизоваться и получить access токен",
+                () -> api.auth.loginAndGetAccessToken(new LoginBodyModel(username, password)));
 
         String firstName = "Ivan";
         String lastName = "Petrov";
@@ -34,13 +37,16 @@ public class UpdateUserTests extends TestBase {
         UpdateUserBodyModel updateData = new UpdateUserBodyModel(firstName, lastName, email);
 
         SuccessfulRegistrationResponseModel updateResponse =
-                api.users.updateUser(accessToken, updateData);
+                step("Обновить данные пользователя",
+                        () -> api.users.updateUser(accessToken, updateData));
 
-        assertThat(updateResponse.id()).isEqualTo(registeredUser.id());
-        assertThat(updateResponse.username()).isEqualTo(username);
-        assertThat(updateResponse.firstName()).isEqualTo(firstName);
-        assertThat(updateResponse.lastName()).isEqualTo(lastName);
-        assertThat(updateResponse.email()).isEqualTo(email);
+        step("Проверить обновлённые данные пользователя", () -> {
+            assertThat(updateResponse.id()).isEqualTo(registeredUser.id());
+            assertThat(updateResponse.username()).isEqualTo(username);
+            assertThat(updateResponse.firstName()).isEqualTo(firstName);
+            assertThat(updateResponse.lastName()).isEqualTo(lastName);
+            assertThat(updateResponse.email()).isEqualTo(email);
+        });
     }
 
     @Test
@@ -48,21 +54,26 @@ public class UpdateUserTests extends TestBase {
         String username = "user_" + System.currentTimeMillis();
         String password = "pass_" + System.currentTimeMillis();
         SuccessfulRegistrationResponseModel registeredUser =
-                api.users.register(new RegistrationBodyModel(username, password));
+                step("Зарегистрировать нового пользователя",
+                        () -> api.users.register(new RegistrationBodyModel(username, password)));
 
-        String accessToken = api.auth.loginAndGetAccessToken(new LoginBodyModel(username, password));
+        String accessToken = step("Авторизоваться и получить access токен",
+                () -> api.auth.loginAndGetAccessToken(new LoginBodyModel(username, password)));
 
         String firstName = "Anna";
         UpdateUserFirstNameBodyModel updateData = new UpdateUserFirstNameBodyModel(firstName);
 
         SuccessfulRegistrationResponseModel updateResponse =
-                api.users.updateUserPartial(accessToken, updateData);
+                step("Частично обновить данные пользователя",
+                        () -> api.users.updateUserPartial(accessToken, updateData));
 
-        assertThat(updateResponse.id()).isEqualTo(registeredUser.id());
-        assertThat(updateResponse.username()).isEqualTo(username);
-        assertThat(updateResponse.firstName()).isEqualTo(firstName);
-        assertThat(updateResponse.lastName()).isEqualTo("");
-        assertThat(updateResponse.email()).isEqualTo("");
+        step("Проверить частично обновлённые данные пользователя", () -> {
+            assertThat(updateResponse.id()).isEqualTo(registeredUser.id());
+            assertThat(updateResponse.username()).isEqualTo(username);
+            assertThat(updateResponse.firstName()).isEqualTo(firstName);
+            assertThat(updateResponse.lastName()).isEqualTo("");
+            assertThat(updateResponse.email()).isEqualTo("");
+        });
     }
 
     @Test
@@ -70,9 +81,12 @@ public class UpdateUserTests extends TestBase {
         UpdateUserBodyModel updateData =
                 new UpdateUserBodyModel("Ivan", "Petrov", "ivan.petrov@example.com");
 
-        WrongCredentialsLoginResponseModel response = api.users.updateUserWithoutToken(updateData);
+        WrongCredentialsLoginResponseModel response =
+                step("Обновить пользователя без токена",
+                        () -> api.users.updateUserWithoutToken(updateData));
 
-        assertThat(response.detail()).isEqualTo(UPDATE_USER_UNAUTHORIZED_ERROR);
+        step("Проверить ошибку отсутствия авторизации",
+                () -> assertThat(response.detail()).isEqualTo(UPDATE_USER_UNAUTHORIZED_ERROR));
     }
 
     @Test
@@ -80,26 +94,35 @@ public class UpdateUserTests extends TestBase {
         UpdateUserBodyModel updateData =
                 new UpdateUserBodyModel("Ivan", "Petrov", "ivan.petrov@example.com");
 
-        UpdateUserInvalidTokenResponseModel response = api.users.updateUserWithInvalidToken(updateData);
+        UpdateUserInvalidTokenResponseModel response =
+                step("Обновить пользователя с некорректным токеном",
+                        () -> api.users.updateUserWithInvalidToken(updateData));
 
-        assertThat(response.detail()).isEqualTo(UPDATE_USER_INVALID_TOKEN_ERROR);
-        assertThat(response.code()).isEqualTo(UPDATE_USER_INVALID_TOKEN_CODE);
+        step("Проверить ошибку некорректного токена", () -> {
+            assertThat(response.detail()).isEqualTo(UPDATE_USER_INVALID_TOKEN_ERROR);
+            assertThat(response.code()).isEqualTo(UPDATE_USER_INVALID_TOKEN_CODE);
+        });
     }
 
     @Test
     public void replaceUserWithPartialBodyTest() {
         String username = "user_" + System.currentTimeMillis();
         String password = "pass_" + System.currentTimeMillis();
-        api.users.register(new RegistrationBodyModel(username, password));
+        step("Зарегистрировать нового пользователя",
+                () -> api.users.register(new RegistrationBodyModel(username, password)));
 
-        String accessToken = api.auth.loginAndGetAccessToken(new LoginBodyModel(username, password));
+        String accessToken = step("Авторизоваться и получить access токен",
+                () -> api.auth.loginAndGetAccessToken(new LoginBodyModel(username, password)));
         UpdateUserPutUsernameOnlyBodyModel updateData = new UpdateUserPutUsernameOnlyBodyModel(username);
 
         UpdateUserValidationErrorResponseModel response =
-                api.users.replaceUserWithValidationError(accessToken, updateData);
+                step("Полностью обновить пользователя с неполным телом запроса",
+                        () -> api.users.replaceUserWithValidationError(accessToken, updateData));
 
-        assertThat(response.firstName()).containsExactly(UPDATE_USER_REQUIRED_FIELD_ERROR);
-        assertThat(response.lastName()).containsExactly(UPDATE_USER_REQUIRED_FIELD_ERROR);
-        assertThat(response.email()).containsExactly(UPDATE_USER_REQUIRED_FIELD_ERROR);
+        step("Проверить ошибки обязательных полей", () -> {
+            assertThat(response.firstName()).containsExactly(UPDATE_USER_REQUIRED_FIELD_ERROR);
+            assertThat(response.lastName()).containsExactly(UPDATE_USER_REQUIRED_FIELD_ERROR);
+            assertThat(response.email()).containsExactly(UPDATE_USER_REQUIRED_FIELD_ERROR);
+        });
     }
 }

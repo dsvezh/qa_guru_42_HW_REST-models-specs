@@ -1,4 +1,5 @@
 <html>
+<#-- @ftlvariable name="data" type="io.qameta.allure.attachment.http.HttpRequestAttachment" -->
 <head>
 <meta charset="UTF-8">
 <style>
@@ -15,20 +16,27 @@ pre code{display:block;padding:10px;background:#f5f5f5;border-radius:4px;border:
 </style>
 </head>
 <body>
-<div><pre><code><span class="hl-method">POST</span>: <span class="hl-url">https://book-club.qa.guru/api/v1/auth/token/</span></code></pre></div>
+<div><pre><code><#if data.method??><span class="hl-method">${data.method}</span><#else>GET</#if>: <#if data.url??><span class="hl-url">${data.url}</span><#else>Unknown</#if></code></pre></div>
+<#if data.body??>
 <h4>Body</h4>
-<div><pre><code class="hl-json">{
-    "username": "user8",
-    "password": "qaguru1234"
-}</code></pre></div>
+<div><pre><code class="hl-json">${data.body}</code></pre></div>
+</#if>
+<#if (data.headers)?has_content>
 <h4>Headers</h4>
-<div><pre><code><span class="hl-header-name">Accept</span>: <span class="hl-header-value">*/*</span></code></pre></div>
-<div><pre><code><span class="hl-header-name">Content-Type</span>: <span class="hl-header-value">application/json</span></code></pre></div>
+<#list data.headers as name, value>
+<div><pre><code><span class="hl-header-name">${name}</span>: <span class="hl-header-value">${value}</span></code></pre></div>
+</#list>
+</#if>
+<#if (data.cookies)?has_content>
+<h4>Cookies</h4>
+<#list data.cookies as name, value>
+<div><pre><code><span class="hl-header-name">${name}</span>: <span class="hl-header-value">${value}</span></code></pre></div>
+</#list>
+</#if>
+<#if data.curl??>
 <h4>Curl</h4>
-<div><pre><code class="hl-curl">curl -v -X POST 'https://book-club.qa.guru/api/v1/auth/token/' -H 'Accept: */*' -H 'Content-Type: application/json' -d '{
-    "username": "user8",
-    "password": "qaguru1234"
-}'</code></pre></div>
+<div><pre><code class="hl-curl">${data.curl}</code></pre></div>
+</#if>
 <script>
 (function(){
 var e=function(s){return(s+'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')};

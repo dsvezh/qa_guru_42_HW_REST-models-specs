@@ -1,4 +1,5 @@
 <html>
+<#-- @ftlvariable name="data" type="io.qameta.allure.attachment.http.HttpResponseAttachment" -->
 <head>
 <meta charset="UTF-8">
 <style>
@@ -9,23 +10,37 @@ h4{margin:16px 0 8px;font-size:13px;color:#666}
 pre{margin:0;white-space:pre-wrap;word-break:break-all}
 code{font-family:ui-monospace,monospace;font-size:13px;background:#f5f5f5;padding:2px 6px;border-radius:4px}
 pre code{display:block;padding:10px;background:#f5f5f5;border-radius:4px;border:1px solid #e0e0e0}
-.hl-method,.hl-header-name{color:var(--l);font-weight:600}
+.hl-status,.hl-header-name{color:var(--l);font-weight:600}
 .hl-url,.hl-json-string,.hl-header-value{color:var(--v)}
 .hl-json-key{color:var(--k)}
 </style>
 </head>
 <body>
-<div><pre><code><span class="hl-method">GET</span>: <span class="hl-url">https://book-club.qa.guru/api/v1/clubs/</span></code></pre></div>
+<div><h4>Status code</h4><pre><code><span class="hl-status"><#if data.responseCode??>${data.responseCode}<#else>Unknown</#if></span></code></pre></div>
+<#if data.url??>
+<div><pre><code><span class="hl-url">${data.url}</span></code></pre></div>
+</#if>
+<#if (data.headers)?has_content>
 <h4>Headers</h4>
-<div><pre><code><span class="hl-header-name">Accept</span>: <span class="hl-header-value">*/*</span></code></pre></div>
-<div><pre><code><span class="hl-header-name">Content-Type</span>: <span class="hl-header-value">application/json</span></code></pre></div>
-<h4>Curl</h4>
-<div><pre><code class="hl-curl">curl -v -X GET 'https://book-club.qa.guru/api/v1/clubs/' -H 'Accept: */*' -H 'Content-Type: application/json'</code></pre></div>
+<#list data.headers as name, value>
+<div><pre><code><span class="hl-header-name">${name}</span>: <span class="hl-header-value">${value}</span></code></pre></div>
+</#list>
+</#if>
+<#if data.body??>
+<h4>Body</h4>
+<div><pre><code class="hl-json">${data.body}</code></pre></div>
+</#if>
+<#if (data.cookies)?has_content>
+<h4>Cookies</h4>
+<#list data.cookies as name, value>
+<div><pre><code><span class="hl-header-name">${name}</span>: <span class="hl-header-value">${value}</span></code></pre></div>
+</#list>
+</#if>
 <script>
 (function(){
 var e=function(s){return(s+'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')};
 function json(el){
-  var t=el.textContent,i=0,h='',c,s,j;
+  var t=el.textContent,i=0,h='',s,j;
   for(;i<t.length;i++)
     if(t[i]==='"'){
       s=i++;
@@ -36,12 +51,8 @@ function json(el){
     }else h+=e(t[i]);
   el.innerHTML=h;
 }
-function curl(el){
-  var h=el.textContent;
-  el.innerHTML=h.replace(/\b(POST|GET|PUT|DELETE|PATCH|HEAD)\b/g,'<span class="hl-method">$1</span>').replace(/'([^'\\]|\\.)*'|"([^"\\]|\\.)*"/g,function(m){return'<span class="hl-url">'+e(m)+'</span>'});
-}
-var codes=document.body.querySelectorAll('code.hl-json, code.hl-curl');
-for(var i=0;i<codes.length;i++) codes[i].classList.contains('hl-curl')?curl(codes[i]):(codes[i].textContent.trim().match(/^[{[]/)&&json(codes[i]));
+var codes=document.body.querySelectorAll('code.hl-json');
+for(var i=0;i<codes.length;i++) codes[i].textContent.trim().match(/^[{[]/)&&json(codes[i]);
 })();
 </script>
 </body>
