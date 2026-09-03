@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Successful create club response",
+  "type": "object",
+  "properties": {
+    "id": { "type": "integer" },
+    "bookTitle": { "type": "string" },
+    "bookAuthors": { "type": "string" },
+    "publicationYear": { "type": "integer" },
+    "description": { "type": "string" },
+    "telegramChatLink": { "type": "string" },
+    "owner": { "type": "integer" },
+    "members": {
+      "type": "array",
+      "items": { "type": "integer" }
+    },
+    "reviews": {
+      "type": "array",
+      "items": { "type": "object" }
+    },
+    "created": { "type": "string" },
+    "modified": { "type": ["string", "null"] }
+  },
+  "required": [
+    "id",
+    "bookTitle",
+    "bookAuthors",
+    "publicationYear",
+    "description",
+    "telegramChatLink",
+    "owner",
+    "members",
+    "reviews",
+    "created"
+  ]
+}

@@ -32,5 +32,18 @@ public class TestData {
             "Given token not valid for any token type";
     public static final String UPDATE_USER_INVALID_TOKEN_CODE = "token_not_valid";
     public static final String UPDATE_USER_REQUIRED_FIELD_ERROR = "This field is required.";
+
+    public static final String CREATE_CLUB_UNAUTHORIZED_ERROR =
+            "Authentication credentials were not provided.";
+    public static final String CREATE_CLUB_REQUIRED_FIELD_ERROR = "This field is required.";
+
+    public static final String UPDATE_CLUB_UNAUTHORIZED_ERROR =
+            "Authentication credentials were not provided.";
+    public static final String UPDATE_CLUB_REQUIRED_FIELD_ERROR = "This field is required.";
+
+    public static final String DELETE_CLUB_UNAUTHORIZED_ERROR =
+            "Authentication credentials were not provided.";
+    public static final String DELETE_CLUB_NOT_FOUND_ERROR =
+            "No Club matches the given query.";
 }
 

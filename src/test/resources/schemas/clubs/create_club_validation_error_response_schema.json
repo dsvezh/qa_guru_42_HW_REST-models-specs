@@ -1,0 +1,12 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Create club validation error response",
+  "type": "object",
+  "properties": {
+    "bookTitle": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "required": ["bookTitle"]
+}
