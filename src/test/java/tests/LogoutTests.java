@@ -21,14 +21,13 @@ public class LogoutTests extends TestBase {
     public void successfulLogoutTest() {
         String username = "user_" + System.currentTimeMillis();
         String password = "pass_" + System.currentTimeMillis();
-        step("Зарегистрировать нового пользователя",
-                () -> api.users.register(new RegistrationBodyModel(username, password)));
+        api.users.register(new RegistrationBodyModel(username, password));
 
-        String refreshToken = step("Авторизоваться и получить refresh токен",
-                () -> api.auth.loginAndGetRefreshToken(new LoginBodyModel(username, password)));
+        String refreshToken =
+                api.auth.loginAndGetRefreshToken(new LoginBodyModel(username, password));
 
         LogoutBodyModel logoutData = new LogoutBodyModel(refreshToken);
-        step("Выйти из системы", () -> api.auth.logout(logoutData));
+        api.auth.logout(logoutData);
     }
 
     @Test
@@ -36,8 +35,7 @@ public class LogoutTests extends TestBase {
         LogoutBodyModel logoutData = new LogoutBodyModel(LOGOUT_INVALID_REFRESH_TOKEN);
 
         LogoutInvalidTokenResponseModel logoutResponse =
-                step("Выйти из системы с некорректным refresh токеном",
-                        () -> api.auth.logoutWithInvalidToken(logoutData));
+                api.auth.logoutWithInvalidToken(logoutData);
 
         step("Проверить ошибку некорректного токена", () -> {
             assertThat(logoutResponse.detail()).isEqualTo(LOGOUT_INVALID_TOKEN_ERROR);
@@ -50,8 +48,7 @@ public class LogoutTests extends TestBase {
         LogoutBodyModel logoutData = new LogoutBodyModel("");
 
         LogoutValidationErrorResponseModel logoutResponse =
-                step("Выйти из системы с пустым refresh токеном",
-                        () -> api.auth.logoutWithValidationError(logoutData));
+                api.auth.logoutWithValidationError(logoutData);
 
         step("Проверить ошибку обязательного поля refresh",
                 () -> assertThat(logoutResponse.refresh()).containsExactly(LOGOUT_BLANK_FIELD_ERROR));
@@ -61,19 +58,16 @@ public class LogoutTests extends TestBase {
     public void repeatedLogoutTest() {
         String username = "user_" + System.currentTimeMillis();
         String password = "pass_" + System.currentTimeMillis();
-        step("Зарегистрировать нового пользователя",
-                () -> api.users.register(new RegistrationBodyModel(username, password)));
+        api.users.register(new RegistrationBodyModel(username, password));
 
         LoginBodyModel loginData = new LoginBodyModel(username, password);
-        String refreshToken = step("Авторизоваться и получить refresh токен",
-                () -> api.auth.loginAndGetRefreshToken(loginData));
+        String refreshToken = api.auth.loginAndGetRefreshToken(loginData);
 
         LogoutBodyModel logoutData = new LogoutBodyModel(refreshToken);
-        step("Выйти из системы", () -> api.auth.logout(logoutData));
+        api.auth.logout(logoutData);
 
         LogoutInvalidTokenResponseModel secondLogoutResponse =
-                step("Повторно выйти из системы с тем же refresh токеном",
-                        () -> api.auth.logoutWithInvalidToken(logoutData));
+                api.auth.logoutWithInvalidToken(logoutData);
 
         step("Проверить ошибку заблокированного токена", () -> {
             assertThat(secondLogoutResponse.detail()).isEqualTo(LOGOUT_TOKEN_BLACKLISTED_ERROR);

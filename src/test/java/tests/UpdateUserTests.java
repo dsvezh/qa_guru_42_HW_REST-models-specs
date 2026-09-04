@@ -25,11 +25,10 @@ public class UpdateUserTests extends TestBase {
         String username = "user_" + System.currentTimeMillis();
         String password = "pass_" + System.currentTimeMillis();
         SuccessfulRegistrationResponseModel registeredUser =
-                step("Зарегистрировать нового пользователя",
-                        () -> api.users.register(new RegistrationBodyModel(username, password)));
+                api.users.register(new RegistrationBodyModel(username, password));
 
-        String accessToken = step("Авторизоваться и получить access токен",
-                () -> api.auth.loginAndGetAccessToken(new LoginBodyModel(username, password)));
+        String accessToken =
+                api.auth.loginAndGetAccessToken(new LoginBodyModel(username, password));
 
         String firstName = "Ivan";
         String lastName = "Petrov";
@@ -37,8 +36,7 @@ public class UpdateUserTests extends TestBase {
         UpdateUserBodyModel updateData = new UpdateUserBodyModel(firstName, lastName, email);
 
         SuccessfulRegistrationResponseModel updateResponse =
-                step("Обновить данные пользователя",
-                        () -> api.users.updateUser(accessToken, updateData));
+                api.users.updateUser(accessToken, updateData);
 
         step("Проверить обновлённые данные пользователя", () -> {
             assertThat(updateResponse.id()).isEqualTo(registeredUser.id());
@@ -54,18 +52,16 @@ public class UpdateUserTests extends TestBase {
         String username = "user_" + System.currentTimeMillis();
         String password = "pass_" + System.currentTimeMillis();
         SuccessfulRegistrationResponseModel registeredUser =
-                step("Зарегистрировать нового пользователя",
-                        () -> api.users.register(new RegistrationBodyModel(username, password)));
+                api.users.register(new RegistrationBodyModel(username, password));
 
-        String accessToken = step("Авторизоваться и получить access токен",
-                () -> api.auth.loginAndGetAccessToken(new LoginBodyModel(username, password)));
+        String accessToken =
+                api.auth.loginAndGetAccessToken(new LoginBodyModel(username, password));
 
         String firstName = "Anna";
         UpdateUserFirstNameBodyModel updateData = new UpdateUserFirstNameBodyModel(firstName);
 
         SuccessfulRegistrationResponseModel updateResponse =
-                step("Частично обновить данные пользователя",
-                        () -> api.users.updateUserPartial(accessToken, updateData));
+                api.users.updateUserPartial(accessToken, updateData);
 
         step("Проверить частично обновлённые данные пользователя", () -> {
             assertThat(updateResponse.id()).isEqualTo(registeredUser.id());
@@ -82,8 +78,7 @@ public class UpdateUserTests extends TestBase {
                 new UpdateUserBodyModel("Ivan", "Petrov", "ivan.petrov@example.com");
 
         WrongCredentialsLoginResponseModel response =
-                step("Обновить пользователя без токена",
-                        () -> api.users.updateUserWithoutToken(updateData));
+                api.users.updateUserWithoutToken(updateData);
 
         step("Проверить ошибку отсутствия авторизации",
                 () -> assertThat(response.detail()).isEqualTo(UPDATE_USER_UNAUTHORIZED_ERROR));
@@ -95,8 +90,7 @@ public class UpdateUserTests extends TestBase {
                 new UpdateUserBodyModel("Ivan", "Petrov", "ivan.petrov@example.com");
 
         UpdateUserInvalidTokenResponseModel response =
-                step("Обновить пользователя с некорректным токеном",
-                        () -> api.users.updateUserWithInvalidToken(updateData));
+                api.users.updateUserWithInvalidToken(updateData);
 
         step("Проверить ошибку некорректного токена", () -> {
             assertThat(response.detail()).isEqualTo(UPDATE_USER_INVALID_TOKEN_ERROR);
@@ -108,16 +102,14 @@ public class UpdateUserTests extends TestBase {
     public void replaceUserWithPartialBodyTest() {
         String username = "user_" + System.currentTimeMillis();
         String password = "pass_" + System.currentTimeMillis();
-        step("Зарегистрировать нового пользователя",
-                () -> api.users.register(new RegistrationBodyModel(username, password)));
+        api.users.register(new RegistrationBodyModel(username, password));
 
-        String accessToken = step("Авторизоваться и получить access токен",
-                () -> api.auth.loginAndGetAccessToken(new LoginBodyModel(username, password)));
+        String accessToken =
+                api.auth.loginAndGetAccessToken(new LoginBodyModel(username, password));
         UpdateUserPutUsernameOnlyBodyModel updateData = new UpdateUserPutUsernameOnlyBodyModel(username);
 
         UpdateUserValidationErrorResponseModel response =
-                step("Полностью обновить пользователя с неполным телом запроса",
-                        () -> api.users.replaceUserWithValidationError(accessToken, updateData));
+                api.users.replaceUserWithValidationError(accessToken, updateData);
 
         step("Проверить ошибки обязательных полей", () -> {
             assertThat(response.firstName()).containsExactly(UPDATE_USER_REQUIRED_FIELD_ERROR);

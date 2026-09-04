@@ -23,8 +23,7 @@ public class ClubsTests extends TestBase {
 
     @Test
     public void getClubsReturns200AndValidStructure() {
-        ClubsListResponseModel response =
-                step("Получить список книжных клубов", () -> api.clubs.getClubs());
+        ClubsListResponseModel response = api.clubs.getClubs();
 
         step("Проверить структуру списка клубов", () -> {
             assertThat(response).isNotNull();
@@ -41,8 +40,7 @@ public class ClubsTests extends TestBase {
 
     @Test
     public void getClubsPaginationWhenTotalExceedsPageSize() {
-        ClubsListResponseModel response =
-                step("Получить список книжных клубов", () -> api.clubs.getClubs());
+        ClubsListResponseModel response = api.clubs.getClubs();
 
         step("Проверить пагинацию списка клубов", () -> {
             assertThat(response.results())
@@ -59,8 +57,7 @@ public class ClubsTests extends TestBase {
 
     @Test
     public void getClubsEachClubHasRequiredFields() {
-        ClubsListResponseModel response =
-                step("Получить список книжных клубов", () -> api.clubs.getClubs());
+        ClubsListResponseModel response = api.clubs.getClubs();
 
         step("Проверить обязательные поля каждого клуба", () -> {
             for (ClubModel club : response.results()) {
@@ -80,8 +77,7 @@ public class ClubsTests extends TestBase {
 
     @Test
     public void getClubsPaginationFieldsPresent() {
-        ClubsListResponseModel response =
-                step("Получить список книжных клубов", () -> api.clubs.getClubs());
+        ClubsListResponseModel response = api.clubs.getClubs();
 
         step("Проверить поля пагинации", () -> {
             assertThat(response.count()).isNotNull();
@@ -94,11 +90,10 @@ public class ClubsTests extends TestBase {
     public void successfulCreateClubTest() {
         String username = "user_" + System.currentTimeMillis();
         String password = "pass_" + System.currentTimeMillis();
-        step("Зарегистрировать нового пользователя",
-                () -> api.users.register(new RegistrationBodyModel(username, password)));
+        api.users.register(new RegistrationBodyModel(username, password));
 
-        String accessToken = step("Авторизоваться и получить access токен",
-                () -> api.auth.loginAndGetAccessToken(new LoginBodyModel(username, password)));
+        String accessToken =
+                api.auth.loginAndGetAccessToken(new LoginBodyModel(username, password));
 
         ClubBodyModel clubData = new ClubBodyModel(
                 "Test book " + System.currentTimeMillis(),
@@ -107,9 +102,7 @@ public class ClubsTests extends TestBase {
                 "Book club created by API test",
                 "https://t.me/test_book_club");
 
-        ClubModel response =
-                step("Создать книжный клуб",
-                        () -> api.clubs.createClub(accessToken, clubData));
+        ClubModel response = api.clubs.createClub(accessToken, clubData);
 
         step("Проверить данные созданного клуба", () -> {
             assertThat(response.id()).isPositive();
@@ -129,11 +122,10 @@ public class ClubsTests extends TestBase {
     public void createClubWithBoundaryValuesTest() {
         String username = "user_" + System.currentTimeMillis();
         String password = "pass_" + System.currentTimeMillis();
-        step("Зарегистрировать нового пользователя",
-                () -> api.users.register(new RegistrationBodyModel(username, password)));
+        api.users.register(new RegistrationBodyModel(username, password));
 
-        String accessToken = step("Авторизоваться и получить access токен",
-                () -> api.auth.loginAndGetAccessToken(new LoginBodyModel(username, password)));
+        String accessToken =
+                api.auth.loginAndGetAccessToken(new LoginBodyModel(username, password));
 
         String uniqueSuffix = String.valueOf(System.nanoTime());
         ClubBodyModel clubData = new ClubBodyModel(
@@ -143,9 +135,7 @@ public class ClubsTests extends TestBase {
                 "Boundary values test",
                 "https://t.me/boundary_values_club");
 
-        ClubModel response =
-                step("Создать книжный клуб с граничными значениями",
-                        () -> api.clubs.createClub(accessToken, clubData));
+        ClubModel response = api.clubs.createClub(accessToken, clubData);
 
         step("Проверить граничные значения созданного клуба", () -> {
             assertThat(response.id()).isPositive();
@@ -166,8 +156,7 @@ public class ClubsTests extends TestBase {
                 "https://t.me/unauthorized_club");
 
         WrongCredentialsLoginResponseModel response =
-                step("Создать книжный клуб без токена",
-                        () -> api.clubs.createClubWithoutToken(clubData));
+                api.clubs.createClubWithoutToken(clubData);
 
         step("Проверить ошибку отсутствия авторизации",
                 () -> assertThat(response.detail()).isEqualTo(CREATE_CLUB_UNAUTHORIZED_ERROR));
@@ -177,11 +166,10 @@ public class ClubsTests extends TestBase {
     public void createClubWithoutBookTitleTest() {
         String username = "user_" + System.currentTimeMillis();
         String password = "pass_" + System.currentTimeMillis();
-        step("Зарегистрировать нового пользователя",
-                () -> api.users.register(new RegistrationBodyModel(username, password)));
+        api.users.register(new RegistrationBodyModel(username, password));
 
-        String accessToken = step("Авторизоваться и получить access токен",
-                () -> api.auth.loginAndGetAccessToken(new LoginBodyModel(username, password)));
+        String accessToken =
+                api.auth.loginAndGetAccessToken(new LoginBodyModel(username, password));
 
         ClubWithoutBookTitleBodyModel clubData = new ClubWithoutBookTitleBodyModel(
                 "Test author",
@@ -190,8 +178,7 @@ public class ClubsTests extends TestBase {
                 "https://t.me/club_without_title");
 
         ClubValidationErrorResponseModel response =
-                step("Создать книжный клуб без названия книги",
-                        () -> api.clubs.createClubWithValidationError(accessToken, clubData));
+                api.clubs.createClubWithValidationError(accessToken, clubData);
 
         step("Проверить ошибку обязательного поля bookTitle",
                 () -> assertThat(response.bookTitle())
@@ -202,11 +189,10 @@ public class ClubsTests extends TestBase {
     public void successfulUpdateClubTest() {
         String username = "user_" + System.currentTimeMillis();
         String password = "pass_" + System.currentTimeMillis();
-        step("Зарегистрировать нового пользователя",
-                () -> api.users.register(new RegistrationBodyModel(username, password)));
+        api.users.register(new RegistrationBodyModel(username, password));
 
-        String accessToken = step("Авторизоваться и получить access токен",
-                () -> api.auth.loginAndGetAccessToken(new LoginBodyModel(username, password)));
+        String accessToken =
+                api.auth.loginAndGetAccessToken(new LoginBodyModel(username, password));
 
         ClubBodyModel initialClubData = new ClubBodyModel(
                 "Initial book " + System.currentTimeMillis(),
@@ -214,9 +200,7 @@ public class ClubsTests extends TestBase {
                 2023,
                 "Initial description",
                 "https://t.me/initial_book_club");
-        ClubModel createdClub =
-                step("Создать книжный клуб",
-                        () -> api.clubs.createClub(accessToken, initialClubData));
+        ClubModel createdClub = api.clubs.createClub(accessToken, initialClubData);
 
         ClubBodyModel updateData = new ClubBodyModel(
                 "Updated book " + System.currentTimeMillis(),
@@ -225,8 +209,7 @@ public class ClubsTests extends TestBase {
                 "Updated book club description",
                 "https://t.me/updated_book_club");
         ClubModel response =
-                step("Обновить книжный клуб",
-                        () -> api.clubs.updateClub(accessToken, createdClub.id(), updateData));
+                api.clubs.updateClub(accessToken, createdClub.id(), updateData);
 
         step("Проверить обновлённые данные клуба", () -> {
             assertThat(response.id()).isEqualTo(createdClub.id());
@@ -244,11 +227,10 @@ public class ClubsTests extends TestBase {
     public void updateClubWithBoundaryValuesTest() {
         String username = "user_" + System.currentTimeMillis();
         String password = "pass_" + System.currentTimeMillis();
-        step("Зарегистрировать нового пользователя",
-                () -> api.users.register(new RegistrationBodyModel(username, password)));
+        api.users.register(new RegistrationBodyModel(username, password));
 
-        String accessToken = step("Авторизоваться и получить access токен",
-                () -> api.auth.loginAndGetAccessToken(new LoginBodyModel(username, password)));
+        String accessToken =
+                api.auth.loginAndGetAccessToken(new LoginBodyModel(username, password));
 
         ClubBodyModel initialClubData = new ClubBodyModel(
                 "Initial book " + System.currentTimeMillis(),
@@ -256,9 +238,7 @@ public class ClubsTests extends TestBase {
                 2023,
                 "Initial description",
                 "https://t.me/initial_boundary_club");
-        ClubModel createdClub =
-                step("Создать книжный клуб",
-                        () -> api.clubs.createClub(accessToken, initialClubData));
+        ClubModel createdClub = api.clubs.createClub(accessToken, initialClubData);
 
         String uniqueSuffix = String.valueOf(System.nanoTime());
         ClubBodyModel updateData = new ClubBodyModel(
@@ -268,8 +248,7 @@ public class ClubsTests extends TestBase {
                 "Boundary values update test",
                 "https://t.me/updated_boundary_club");
         ClubModel response =
-                step("Обновить книжный клуб граничными значениями",
-                        () -> api.clubs.updateClub(accessToken, createdClub.id(), updateData));
+                api.clubs.updateClub(accessToken, createdClub.id(), updateData);
 
         step("Проверить граничные значения обновлённого клуба", () -> {
             assertThat(response.id()).isEqualTo(createdClub.id());
@@ -284,11 +263,10 @@ public class ClubsTests extends TestBase {
     public void updateClubWithoutTokenTest() {
         String username = "user_" + System.currentTimeMillis();
         String password = "pass_" + System.currentTimeMillis();
-        step("Зарегистрировать нового пользователя",
-                () -> api.users.register(new RegistrationBodyModel(username, password)));
+        api.users.register(new RegistrationBodyModel(username, password));
 
-        String accessToken = step("Авторизоваться и получить access токен",
-                () -> api.auth.loginAndGetAccessToken(new LoginBodyModel(username, password)));
+        String accessToken =
+                api.auth.loginAndGetAccessToken(new LoginBodyModel(username, password));
 
         ClubBodyModel initialClubData = new ClubBodyModel(
                 "Initial book " + System.currentTimeMillis(),
@@ -296,9 +274,7 @@ public class ClubsTests extends TestBase {
                 2023,
                 "Initial description",
                 "https://t.me/unauthorized_update_club");
-        ClubModel createdClub =
-                step("Создать книжный клуб",
-                        () -> api.clubs.createClub(accessToken, initialClubData));
+        ClubModel createdClub = api.clubs.createClub(accessToken, initialClubData);
 
         ClubBodyModel updateData = new ClubBodyModel(
                 "Unauthorized update",
@@ -307,8 +283,7 @@ public class ClubsTests extends TestBase {
                 "Club must not be updated",
                 "https://t.me/unauthorized_updated_club");
         WrongCredentialsLoginResponseModel response =
-                step("Обновить книжный клуб без токена",
-                        () -> api.clubs.updateClubWithoutToken(createdClub.id(), updateData));
+                api.clubs.updateClubWithoutToken(createdClub.id(), updateData);
 
         step("Проверить ошибку отсутствия авторизации",
                 () -> assertThat(response.detail()).isEqualTo(UPDATE_CLUB_UNAUTHORIZED_ERROR));
@@ -318,11 +293,10 @@ public class ClubsTests extends TestBase {
     public void updateClubWithoutBookTitleTest() {
         String username = "user_" + System.currentTimeMillis();
         String password = "pass_" + System.currentTimeMillis();
-        step("Зарегистрировать нового пользователя",
-                () -> api.users.register(new RegistrationBodyModel(username, password)));
+        api.users.register(new RegistrationBodyModel(username, password));
 
-        String accessToken = step("Авторизоваться и получить access токен",
-                () -> api.auth.loginAndGetAccessToken(new LoginBodyModel(username, password)));
+        String accessToken =
+                api.auth.loginAndGetAccessToken(new LoginBodyModel(username, password));
 
         ClubBodyModel initialClubData = new ClubBodyModel(
                 "Initial book " + System.currentTimeMillis(),
@@ -330,9 +304,7 @@ public class ClubsTests extends TestBase {
                 2023,
                 "Initial description",
                 "https://t.me/validation_update_club");
-        ClubModel createdClub =
-                step("Создать книжный клуб",
-                        () -> api.clubs.createClub(accessToken, initialClubData));
+        ClubModel createdClub = api.clubs.createClub(accessToken, initialClubData);
 
         ClubWithoutBookTitleBodyModel updateData = new ClubWithoutBookTitleBodyModel(
                 "Updated author",
@@ -340,9 +312,7 @@ public class ClubsTests extends TestBase {
                 "Club update without required book title",
                 "https://t.me/updated_club_without_title");
         ClubValidationErrorResponseModel response =
-                step("Обновить книжный клуб без названия книги",
-                        () -> api.clubs.updateClubWithValidationError(
-                                accessToken, createdClub.id(), updateData));
+                api.clubs.updateClubWithValidationError(accessToken, createdClub.id(), updateData);
 
         step("Проверить ошибку обязательного поля bookTitle",
                 () -> assertThat(response.bookTitle())
@@ -353,11 +323,10 @@ public class ClubsTests extends TestBase {
     public void successfulDeleteClubTest() {
         String username = "user_" + System.currentTimeMillis();
         String password = "pass_" + System.currentTimeMillis();
-        step("Зарегистрировать нового пользователя",
-                () -> api.users.register(new RegistrationBodyModel(username, password)));
+        api.users.register(new RegistrationBodyModel(username, password));
 
-        String accessToken = step("Авторизоваться и получить access токен",
-                () -> api.auth.loginAndGetAccessToken(new LoginBodyModel(username, password)));
+        String accessToken =
+                api.auth.loginAndGetAccessToken(new LoginBodyModel(username, password));
 
         ClubBodyModel clubData = new ClubBodyModel(
                 "Book to delete " + System.currentTimeMillis(),
@@ -365,23 +334,19 @@ public class ClubsTests extends TestBase {
                 2024,
                 "Book club created for deletion",
                 "https://t.me/book_club_to_delete");
-        ClubModel createdClub =
-                step("Создать книжный клуб",
-                        () -> api.clubs.createClub(accessToken, clubData));
+        ClubModel createdClub = api.clubs.createClub(accessToken, clubData);
 
-        step("Удалить книжный клуб",
-                () -> api.clubs.deleteClub(accessToken, createdClub.id()));
+        api.clubs.deleteClub(accessToken, createdClub.id());
     }
 
     @Test
     public void deleteClubWithBoundaryValuesTest() {
         String username = "user_" + System.currentTimeMillis();
         String password = "pass_" + System.currentTimeMillis();
-        step("Зарегистрировать нового пользователя",
-                () -> api.users.register(new RegistrationBodyModel(username, password)));
+        api.users.register(new RegistrationBodyModel(username, password));
 
-        String accessToken = step("Авторизоваться и получить access токен",
-                () -> api.auth.loginAndGetAccessToken(new LoginBodyModel(username, password)));
+        String accessToken =
+                api.auth.loginAndGetAccessToken(new LoginBodyModel(username, password));
 
         String uniqueSuffix = String.valueOf(System.nanoTime());
         ClubBodyModel clubData = new ClubBodyModel(
@@ -390,23 +355,19 @@ public class ClubsTests extends TestBase {
                 Integer.MAX_VALUE,
                 "Boundary values delete test",
                 "https://t.me/boundary_values_delete_club");
-        ClubModel createdClub =
-                step("Создать книжный клуб с граничными значениями",
-                        () -> api.clubs.createClub(accessToken, clubData));
+        ClubModel createdClub = api.clubs.createClub(accessToken, clubData);
 
-        step("Удалить книжный клуб с граничными значениями",
-                () -> api.clubs.deleteClub(accessToken, createdClub.id()));
+        api.clubs.deleteClub(accessToken, createdClub.id());
     }
 
     @Test
     public void deleteClubWithoutTokenTest() {
         String username = "user_" + System.currentTimeMillis();
         String password = "pass_" + System.currentTimeMillis();
-        step("Зарегистрировать нового пользователя",
-                () -> api.users.register(new RegistrationBodyModel(username, password)));
+        api.users.register(new RegistrationBodyModel(username, password));
 
-        String accessToken = step("Авторизоваться и получить access токен",
-                () -> api.auth.loginAndGetAccessToken(new LoginBodyModel(username, password)));
+        String accessToken =
+                api.auth.loginAndGetAccessToken(new LoginBodyModel(username, password));
 
         ClubBodyModel clubData = new ClubBodyModel(
                 "Unauthorized delete " + System.currentTimeMillis(),
@@ -414,13 +375,10 @@ public class ClubsTests extends TestBase {
                 2024,
                 "Club must not be deleted",
                 "https://t.me/unauthorized_delete_club");
-        ClubModel createdClub =
-                step("Создать книжный клуб",
-                        () -> api.clubs.createClub(accessToken, clubData));
+        ClubModel createdClub = api.clubs.createClub(accessToken, clubData);
 
         WrongCredentialsLoginResponseModel response =
-                step("Удалить книжный клуб без токена",
-                        () -> api.clubs.deleteClubWithoutToken(createdClub.id()));
+                api.clubs.deleteClubWithoutToken(createdClub.id());
 
         step("Проверить ошибку отсутствия авторизации",
                 () -> assertThat(response.detail()).isEqualTo(DELETE_CLUB_UNAUTHORIZED_ERROR));
@@ -430,16 +388,13 @@ public class ClubsTests extends TestBase {
     public void deleteNonExistentClubTest() {
         String username = "user_" + System.currentTimeMillis();
         String password = "pass_" + System.currentTimeMillis();
-        step("Зарегистрировать нового пользователя",
-                () -> api.users.register(new RegistrationBodyModel(username, password)));
+        api.users.register(new RegistrationBodyModel(username, password));
 
-        String accessToken = step("Авторизоваться и получить access токен",
-                () -> api.auth.loginAndGetAccessToken(new LoginBodyModel(username, password)));
+        String accessToken =
+                api.auth.loginAndGetAccessToken(new LoginBodyModel(username, password));
 
         WrongCredentialsLoginResponseModel response =
-                step("Удалить несуществующий книжный клуб",
-                        () -> api.clubs.deleteNonExistentClub(
-                                accessToken, Integer.MAX_VALUE));
+                api.clubs.deleteNonExistentClub(accessToken, Integer.MAX_VALUE);
 
         step("Проверить ошибку отсутствия книжного клуба",
                 () -> assertThat(response.detail()).isEqualTo(DELETE_CLUB_NOT_FOUND_ERROR));

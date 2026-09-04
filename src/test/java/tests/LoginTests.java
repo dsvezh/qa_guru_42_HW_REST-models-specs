@@ -17,13 +17,11 @@ public class LoginTests extends TestBase {
     public void successfulLoginTest() {
         String username = "user_" + System.currentTimeMillis();
         String password = "pass_" + System.currentTimeMillis();
-        step("Зарегистрировать нового пользователя",
-                () -> api.users.register(new RegistrationBodyModel(username, password)));
+        api.users.register(new RegistrationBodyModel(username, password));
 
         LoginBodyModel loginData = new LoginBodyModel(username, password);
 
-        SuccessfulLoginResponseModel loginResponse =
-                step("Авторизоваться с корректными данными", () -> api.auth.login(loginData));
+        SuccessfulLoginResponseModel loginResponse = api.auth.login(loginData);
 
         step("Проверить access и refresh токены", () -> {
             String actualAccess = loginResponse.access();
@@ -39,8 +37,7 @@ public class LoginTests extends TestBase {
         LoginBodyModel loginData = new LoginBodyModel(LOGIN_USERNAME, LOGIN_WRONG_PASSWORD);
 
         WrongCredentialsLoginResponseModel loginResponse =
-                step("Авторизоваться с неверным паролем",
-                        () -> api.auth.loginWrongCredentials(loginData));
+                api.auth.loginWrongCredentials(loginData);
 
         step("Проверить сообщение об ошибке авторизации",
                 () -> assertThat(loginResponse.detail()).isEqualTo(LOGIN_WRONG_CREDENTIALS_ERROR));
@@ -51,8 +48,7 @@ public class LoginTests extends TestBase {
         LoginBodyModel loginData = new LoginBodyModel(LOGIN_WRONG_USERNAME, LOGIN_PASSWORD);
 
         WrongCredentialsLoginResponseModel loginResponse =
-                step("Авторизоваться с неверным именем пользователя",
-                        () -> api.auth.loginWrongCredentials(loginData));
+                api.auth.loginWrongCredentials(loginData);
 
         step("Проверить сообщение об ошибке авторизации",
                 () -> assertThat(loginResponse.detail()).isEqualTo(LOGIN_WRONG_CREDENTIALS_ERROR));
@@ -63,8 +59,7 @@ public class LoginTests extends TestBase {
         LoginBodyModel loginData = new LoginBodyModel("", LOGIN_PASSWORD);
 
         LoginValidationErrorResponseModel loginResponse =
-                step("Авторизоваться с пустым именем пользователя",
-                        () -> api.auth.loginWithValidationError(loginData));
+                api.auth.loginWithValidationError(loginData);
 
         step("Проверить ошибку обязательного поля username",
                 () -> assertThat(loginResponse.username()).containsExactly(LOGIN_BLANK_FIELD_ERROR));
@@ -75,8 +70,7 @@ public class LoginTests extends TestBase {
         LoginBodyModel loginData = new LoginBodyModel(LOGIN_USERNAME, "");
 
         LoginValidationErrorResponseModel loginResponse =
-                step("Авторизоваться с пустым паролем",
-                        () -> api.auth.loginWithValidationError(loginData));
+                api.auth.loginWithValidationError(loginData);
 
         step("Проверить ошибку обязательного поля password",
                 () -> assertThat(loginResponse.password()).containsExactly(LOGIN_BLANK_FIELD_ERROR));
