@@ -9,9 +9,9 @@ import org.junit.jupiter.api.Test;
 
 import static io.qameta.allure.Allure.step;
 import static org.assertj.core.api.Assertions.assertThat;
-import static tests.TestData.LOGOUT_BLANK_FIELD_ERROR;
+import static tests.TestData.BLANK_FIELD_ERROR;
+import static tests.TestData.INVALID_TOKEN_CODE;
 import static tests.TestData.LOGOUT_INVALID_REFRESH_TOKEN;
-import static tests.TestData.LOGOUT_INVALID_TOKEN_CODE;
 import static tests.TestData.LOGOUT_INVALID_TOKEN_ERROR;
 import static tests.TestData.LOGOUT_TOKEN_BLACKLISTED_ERROR;
 
@@ -39,7 +39,7 @@ public class LogoutTests extends TestBase {
 
         step("Проверить ошибку некорректного токена", () -> {
             assertThat(logoutResponse.detail()).isEqualTo(LOGOUT_INVALID_TOKEN_ERROR);
-            assertThat(logoutResponse.code()).isEqualTo(LOGOUT_INVALID_TOKEN_CODE);
+            assertThat(logoutResponse.code()).isEqualTo(INVALID_TOKEN_CODE);
         });
     }
 
@@ -51,7 +51,7 @@ public class LogoutTests extends TestBase {
                 api.auth.logoutWithValidationError(logoutData);
 
         step("Проверить ошибку обязательного поля refresh",
-                () -> assertThat(logoutResponse.refresh()).containsExactly(LOGOUT_BLANK_FIELD_ERROR));
+                () -> assertThat(logoutResponse.refresh()).containsExactly(BLANK_FIELD_ERROR));
     }
 
     @Test
@@ -71,7 +71,7 @@ public class LogoutTests extends TestBase {
 
         step("Проверить ошибку заблокированного токена", () -> {
             assertThat(secondLogoutResponse.detail()).isEqualTo(LOGOUT_TOKEN_BLACKLISTED_ERROR);
-            assertThat(secondLogoutResponse.code()).isEqualTo(LOGOUT_INVALID_TOKEN_CODE);
+            assertThat(secondLogoutResponse.code()).isEqualTo(INVALID_TOKEN_CODE);
         });
     }
 }

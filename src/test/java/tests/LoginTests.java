@@ -62,7 +62,7 @@ public class LoginTests extends TestBase {
                 api.auth.loginWithValidationError(loginData);
 
         step("Проверить ошибку обязательного поля username",
-                () -> assertThat(loginResponse.username()).containsExactly(LOGIN_BLANK_FIELD_ERROR));
+                () -> assertThat(loginResponse.username()).containsExactly(BLANK_FIELD_ERROR));
     }
 
     @Test
@@ -73,7 +73,7 @@ public class LoginTests extends TestBase {
                 api.auth.loginWithValidationError(loginData);
 
         step("Проверить ошибку обязательного поля password",
-                () -> assertThat(loginResponse.password()).containsExactly(LOGIN_BLANK_FIELD_ERROR));
+                () -> assertThat(loginResponse.password()).containsExactly(BLANK_FIELD_ERROR));
     }
 
 }

@@ -13,10 +13,10 @@ import org.junit.jupiter.api.Test;
 
 import static io.qameta.allure.Allure.step;
 import static org.assertj.core.api.Assertions.assertThat;
-import static tests.TestData.UPDATE_USER_INVALID_TOKEN_CODE;
+import static tests.TestData.INVALID_TOKEN_CODE;
+import static tests.TestData.REQUIRED_FIELD_ERROR;
+import static tests.TestData.UNAUTHORIZED_ERROR;
 import static tests.TestData.UPDATE_USER_INVALID_TOKEN_ERROR;
-import static tests.TestData.UPDATE_USER_REQUIRED_FIELD_ERROR;
-import static tests.TestData.UPDATE_USER_UNAUTHORIZED_ERROR;
 
 public class UpdateUserTests extends TestBase {
 
@@ -81,7 +81,7 @@ public class UpdateUserTests extends TestBase {
                 api.users.updateUserWithoutToken(updateData);
 
         step("Проверить ошибку отсутствия авторизации",
-                () -> assertThat(response.detail()).isEqualTo(UPDATE_USER_UNAUTHORIZED_ERROR));
+                () -> assertThat(response.detail()).isEqualTo(UNAUTHORIZED_ERROR));
     }
 
     @Test
@@ -94,7 +94,7 @@ public class UpdateUserTests extends TestBase {
 
         step("Проверить ошибку некорректного токена", () -> {
             assertThat(response.detail()).isEqualTo(UPDATE_USER_INVALID_TOKEN_ERROR);
-            assertThat(response.code()).isEqualTo(UPDATE_USER_INVALID_TOKEN_CODE);
+            assertThat(response.code()).isEqualTo(INVALID_TOKEN_CODE);
         });
     }
 
@@ -112,9 +112,9 @@ public class UpdateUserTests extends TestBase {
                 api.users.replaceUserWithValidationError(accessToken, updateData);
 
         step("Проверить ошибки обязательных полей", () -> {
-            assertThat(response.firstName()).containsExactly(UPDATE_USER_REQUIRED_FIELD_ERROR);
-            assertThat(response.lastName()).containsExactly(UPDATE_USER_REQUIRED_FIELD_ERROR);
-            assertThat(response.email()).containsExactly(UPDATE_USER_REQUIRED_FIELD_ERROR);
+            assertThat(response.firstName()).containsExactly(REQUIRED_FIELD_ERROR);
+            assertThat(response.lastName()).containsExactly(REQUIRED_FIELD_ERROR);
+            assertThat(response.email()).containsExactly(REQUIRED_FIELD_ERROR);
         });
     }
 }

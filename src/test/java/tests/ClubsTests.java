@@ -12,12 +12,9 @@ import org.junit.jupiter.api.Test;
 
 import static io.qameta.allure.Allure.step;
 import static org.assertj.core.api.Assertions.assertThat;
-import static tests.TestData.CREATE_CLUB_REQUIRED_FIELD_ERROR;
-import static tests.TestData.CREATE_CLUB_UNAUTHORIZED_ERROR;
 import static tests.TestData.DELETE_CLUB_NOT_FOUND_ERROR;
-import static tests.TestData.DELETE_CLUB_UNAUTHORIZED_ERROR;
-import static tests.TestData.UPDATE_CLUB_REQUIRED_FIELD_ERROR;
-import static tests.TestData.UPDATE_CLUB_UNAUTHORIZED_ERROR;
+import static tests.TestData.REQUIRED_FIELD_ERROR;
+import static tests.TestData.UNAUTHORIZED_ERROR;
 
 public class ClubsTests extends TestBase {
 
@@ -159,7 +156,7 @@ public class ClubsTests extends TestBase {
                 api.clubs.createClubWithoutToken(clubData);
 
         step("Проверить ошибку отсутствия авторизации",
-                () -> assertThat(response.detail()).isEqualTo(CREATE_CLUB_UNAUTHORIZED_ERROR));
+                () -> assertThat(response.detail()).isEqualTo(UNAUTHORIZED_ERROR));
     }
 
     @Test
@@ -182,7 +179,7 @@ public class ClubsTests extends TestBase {
 
         step("Проверить ошибку обязательного поля bookTitle",
                 () -> assertThat(response.bookTitle())
-                        .containsExactly(CREATE_CLUB_REQUIRED_FIELD_ERROR));
+                        .containsExactly(REQUIRED_FIELD_ERROR));
     }
 
     @Test
@@ -286,7 +283,7 @@ public class ClubsTests extends TestBase {
                 api.clubs.updateClubWithoutToken(createdClub.id(), updateData);
 
         step("Проверить ошибку отсутствия авторизации",
-                () -> assertThat(response.detail()).isEqualTo(UPDATE_CLUB_UNAUTHORIZED_ERROR));
+                () -> assertThat(response.detail()).isEqualTo(UNAUTHORIZED_ERROR));
     }
 
     @Test
@@ -316,7 +313,7 @@ public class ClubsTests extends TestBase {
 
         step("Проверить ошибку обязательного поля bookTitle",
                 () -> assertThat(response.bookTitle())
-                        .containsExactly(UPDATE_CLUB_REQUIRED_FIELD_ERROR));
+                        .containsExactly(REQUIRED_FIELD_ERROR));
     }
 
     @Test
@@ -381,7 +378,7 @@ public class ClubsTests extends TestBase {
                 api.clubs.deleteClubWithoutToken(createdClub.id());
 
         step("Проверить ошибку отсутствия авторизации",
-                () -> assertThat(response.detail()).isEqualTo(DELETE_CLUB_UNAUTHORIZED_ERROR));
+                () -> assertThat(response.detail()).isEqualTo(UNAUTHORIZED_ERROR));
     }
 
     @Test

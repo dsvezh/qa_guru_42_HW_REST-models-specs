@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import static io.qameta.allure.Allure.step;
 import static org.assertj.core.api.Assertions.assertThat;
-import static tests.TestData.REGISTRATION_BLANK_FIELD_ERROR;
+import static tests.TestData.BLANK_FIELD_ERROR;
 import static tests.TestData.REGISTRATION_EXISTING_USER_ERROR;
 import static tests.TestData.REGISTRATION_IP_REGEXP;
 
@@ -70,7 +70,7 @@ public class RegistrationTests extends TestBase {
                 api.users.registerWithValidationError(registrationData);
 
         step("Проверить ошибку обязательного поля username",
-                () -> assertThat(registrationResponse.username()).containsExactly(REGISTRATION_BLANK_FIELD_ERROR));
+                () -> assertThat(registrationResponse.username()).containsExactly(BLANK_FIELD_ERROR));
     }
 
     @Test
@@ -81,7 +81,7 @@ public class RegistrationTests extends TestBase {
                 api.users.registerWithValidationError(registrationData);
 
         step("Проверить ошибку обязательного поля password",
-                () -> assertThat(registrationResponse.password()).containsExactly(REGISTRATION_BLANK_FIELD_ERROR));
+                () -> assertThat(registrationResponse.password()).containsExactly(BLANK_FIELD_ERROR));
     }
 
     @Test
@@ -92,8 +92,8 @@ public class RegistrationTests extends TestBase {
                 api.users.registerWithValidationError(registrationData);
 
         step("Проверить ошибки обязательных полей", () -> {
-            assertThat(registrationResponse.username()).containsExactly(REGISTRATION_BLANK_FIELD_ERROR);
-            assertThat(registrationResponse.password()).containsExactly(REGISTRATION_BLANK_FIELD_ERROR);
+            assertThat(registrationResponse.username()).containsExactly(BLANK_FIELD_ERROR);
+            assertThat(registrationResponse.password()).containsExactly(BLANK_FIELD_ERROR);
         });
     }
 }
