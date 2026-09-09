@@ -102,6 +102,15 @@ public class ClubsSpec {
                     .expectBody("detail", notNullValue())
                     .build();
 
+    public static ResponseSpecification updateClubReviewForbiddenResponseSpec =
+            new ResponseSpecBuilder()
+                    .log(ALL)
+                    .expectStatusCode(403)
+                    .expectBody(matchesJsonSchemaInClasspath(
+                            "schemas/login/wrong_credentials_login_response_schema.json"))
+                    .expectBody("detail", notNullValue())
+                    .build();
+
     public static ResponseSpecification updateClubReviewValidationErrorResponseSpec =
             new ResponseSpecBuilder()
                     .log(ALL)
@@ -122,6 +131,15 @@ public class ClubsSpec {
             new ResponseSpecBuilder()
                     .log(ALL)
                     .expectStatusCode(401)
+                    .expectBody(matchesJsonSchemaInClasspath(
+                            "schemas/login/wrong_credentials_login_response_schema.json"))
+                    .expectBody("detail", notNullValue())
+                    .build();
+
+    public static ResponseSpecification deleteClubReviewForbiddenResponseSpec =
+            new ResponseSpecBuilder()
+                    .log(ALL)
+                    .expectStatusCode(403)
                     .expectBody(matchesJsonSchemaInClasspath(
                             "schemas/login/wrong_credentials_login_response_schema.json"))
                     .expectBody("detail", notNullValue())

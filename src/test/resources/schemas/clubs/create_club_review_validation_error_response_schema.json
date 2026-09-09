@@ -1,0 +1,12 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Create club review validation error response",
+  "type": "object",
+  "properties": {
+    "assessment": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "required": ["assessment"]
+}

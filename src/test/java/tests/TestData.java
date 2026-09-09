@@ -25,6 +25,8 @@ public class TestData {
 
     public static final String UNAUTHORIZED_ERROR =
             "Authentication credentials were not provided.";
+    public static final String FORBIDDEN_ERROR =
+            "You do not have permission to perform this action.";
     public static final String UPDATE_USER_INVALID_ACCESS_TOKEN = "invalid_access_token";
     public static final String UPDATE_USER_INVALID_TOKEN_ERROR =
             "Given token not valid for any token type";

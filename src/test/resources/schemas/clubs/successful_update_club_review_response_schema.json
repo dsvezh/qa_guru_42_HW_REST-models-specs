@@ -1,0 +1,32 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Successful update club review response",
+  "type": "object",
+  "properties": {
+    "id": { "type": "integer" },
+    "club": { "type": "integer" },
+    "user": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "username": { "type": "string" }
+      },
+      "required": ["id", "username"]
+    },
+    "review": { "type": "string" },
+    "assessment": { "type": "integer" },
+    "readPages": { "type": "integer" },
+    "created": { "type": "string" },
+    "modified": { "type": "string" }
+  },
+  "required": [
+    "id",
+    "club",
+    "user",
+    "review",
+    "assessment",
+    "readPages",
+    "created",
+    "modified"
+  ]
+}

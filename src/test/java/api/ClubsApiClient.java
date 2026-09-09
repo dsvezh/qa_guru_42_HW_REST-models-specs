@@ -22,6 +22,7 @@ import static specs.clubs.ClubsSpec.createClubReviewValidationErrorResponseSpec;
 import static specs.clubs.ClubsSpec.createClubUnauthorizedResponseSpec;
 import static specs.clubs.ClubsSpec.createClubValidationErrorResponseSpec;
 import static specs.clubs.ClubsSpec.deleteClubReviewNotFoundResponseSpec;
+import static specs.clubs.ClubsSpec.deleteClubReviewForbiddenResponseSpec;
 import static specs.clubs.ClubsSpec.deleteClubReviewUnauthorizedResponseSpec;
 import static specs.clubs.ClubsSpec.deleteClubNotFoundResponseSpec;
 import static specs.clubs.ClubsSpec.deleteClubUnauthorizedResponseSpec;
@@ -34,6 +35,7 @@ import static specs.clubs.ClubsSpec.successfulDeleteClubResponseSpec;
 import static specs.clubs.ClubsSpec.successfulUpdateClubReviewResponseSpec;
 import static specs.clubs.ClubsSpec.successfulUpdateClubResponseSpec;
 import static specs.clubs.ClubsSpec.updateClubReviewUnauthorizedResponseSpec;
+import static specs.clubs.ClubsSpec.updateClubReviewForbiddenResponseSpec;
 import static specs.clubs.ClubsSpec.updateClubReviewValidationErrorResponseSpec;
 import static specs.clubs.ClubsSpec.updateClubUnauthorizedResponseSpec;
 import static specs.clubs.ClubsSpec.updateClubValidationErrorResponseSpec;
@@ -138,6 +140,19 @@ public class ClubsApiClient {
                 .as(WrongCredentialsLoginResponseModel.class);
     }
 
+    @Step("Обновление чужого отзыва о клубе PUT /clubs/reviews/{id}/")
+    public WrongCredentialsLoginResponseModel updateAnotherUsersClubReview(
+            String accessToken, Integer reviewId, ClubReviewBodyModel body) {
+        return given(authorizedClubsRequestSpec(accessToken))
+                .body(body)
+                .when()
+                .put("/clubs/reviews/{id}/", reviewId)
+                .then()
+                .spec(updateClubReviewForbiddenResponseSpec)
+                .extract()
+                .as(WrongCredentialsLoginResponseModel.class);
+    }
+
     @Step("Обновление отзыва о клубе с ошибкой валидации PUT /clubs/reviews/{id}/")
     public ClubReviewValidationErrorResponseModel updateClubReviewWithValidationError(
             String accessToken, Integer reviewId, ClubReviewBodyModel body) {
@@ -167,6 +182,18 @@ public class ClubsApiClient {
                 .delete("/clubs/reviews/{id}/", reviewId)
                 .then()
                 .spec(deleteClubReviewUnauthorizedResponseSpec)
+                .extract()
+                .as(WrongCredentialsLoginResponseModel.class);
+    }
+
+    @Step("Удаление чужого отзыва о клубе DELETE /clubs/reviews/{id}/")
+    public WrongCredentialsLoginResponseModel deleteAnotherUsersClubReview(
+            String accessToken, Integer reviewId) {
+        return given(authorizedClubsRequestSpec(accessToken))
+                .when()
+                .delete("/clubs/reviews/{id}/", reviewId)
+                .then()
+                .spec(deleteClubReviewForbiddenResponseSpec)
                 .extract()
                 .as(WrongCredentialsLoginResponseModel.class);
     }

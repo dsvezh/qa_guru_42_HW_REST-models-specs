@@ -113,6 +113,8 @@ public class ClubsTests extends TestBase {
             assertThat(response.reviews()).isEmpty();
             assertThat(response.created()).isNotBlank();
         });
+
+        api.clubs.deleteClub(accessToken, response.id());
     }
 
     @Test
@@ -141,6 +143,8 @@ public class ClubsTests extends TestBase {
             assertThat(response.publicationYear()).isEqualTo(Integer.MAX_VALUE);
             assertThat(response.owner()).isPositive();
         });
+
+        api.clubs.deleteClub(accessToken, response.id());
     }
 
     @Test
@@ -218,6 +222,8 @@ public class ClubsTests extends TestBase {
             assertThat(response.owner()).isEqualTo(createdClub.owner());
             assertThat(response.modified()).isNotBlank();
         });
+
+        api.clubs.deleteClub(accessToken, createdClub.id());
     }
 
     @Test
@@ -254,6 +260,8 @@ public class ClubsTests extends TestBase {
             assertThat(response.publicationYear()).isEqualTo(Integer.MAX_VALUE);
             assertThat(response.modified()).isNotBlank();
         });
+
+        api.clubs.deleteClub(accessToken, createdClub.id());
     }
 
     @Test
@@ -284,6 +292,8 @@ public class ClubsTests extends TestBase {
 
         step("Проверить ошибку отсутствия авторизации",
                 () -> assertThat(response.detail()).isEqualTo(UNAUTHORIZED_ERROR));
+
+        api.clubs.deleteClub(accessToken, createdClub.id());
     }
 
     @Test
@@ -314,6 +324,8 @@ public class ClubsTests extends TestBase {
         step("Проверить ошибку обязательного поля bookTitle",
                 () -> assertThat(response.bookTitle())
                         .containsExactly(REQUIRED_FIELD_ERROR));
+
+        api.clubs.deleteClub(accessToken, createdClub.id());
     }
 
     @Test
@@ -379,6 +391,8 @@ public class ClubsTests extends TestBase {
 
         step("Проверить ошибку отсутствия авторизации",
                 () -> assertThat(response.detail()).isEqualTo(UNAUTHORIZED_ERROR));
+
+        api.clubs.deleteClub(accessToken, createdClub.id());
     }
 
     @Test
