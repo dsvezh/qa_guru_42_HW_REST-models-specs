@@ -5,6 +5,7 @@ import models.logout.LogoutBodyModel;
 import models.logout.LogoutInvalidTokenResponseModel;
 import models.logout.LogoutValidationErrorResponseModel;
 import models.registration.RegistrationBodyModel;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static io.qameta.allure.Allure.step;
@@ -18,6 +19,7 @@ import static tests.TestData.LOGOUT_TOKEN_BLACKLISTED_ERROR;
 public class LogoutTests extends TestBase {
 
     @Test
+    @DisplayName("Пользователь успешно выходит по refresh-токену")
     public void successfulLogoutTest() {
         String username = "user_" + System.currentTimeMillis();
         String password = "pass_" + System.currentTimeMillis();
@@ -31,6 +33,7 @@ public class LogoutTests extends TestBase {
     }
 
     @Test
+    @DisplayName("Выход с некорректным refresh-токеном возвращает ошибку")
     public void invalidRefreshTokenLogoutTest() {
         LogoutBodyModel logoutData = new LogoutBodyModel(LOGOUT_INVALID_REFRESH_TOKEN);
 
@@ -44,6 +47,7 @@ public class LogoutTests extends TestBase {
     }
 
     @Test
+    @DisplayName("Выход без refresh-токена возвращает ошибку валидации")
     public void emptyRefreshTokenLogoutTest() {
         LogoutBodyModel logoutData = new LogoutBodyModel("");
 
@@ -55,6 +59,7 @@ public class LogoutTests extends TestBase {
     }
 
     @Test
+    @DisplayName("Повторный выход с тем же токеном отклоняется как заблокированный")
     public void repeatedLogoutTest() {
         String username = "user_" + System.currentTimeMillis();
         String password = "pass_" + System.currentTimeMillis();

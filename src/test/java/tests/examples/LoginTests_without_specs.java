@@ -4,6 +4,7 @@ import models.login.LoginBodyModel;
 import models.login.SuccessfulLoginResponseModel;
 import models.login.WrongCredentialsLoginResponseModel;
 import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import tests.TestBase;
 
@@ -22,6 +23,7 @@ public class LoginTests_without_specs extends TestBase {
 
     @Test
     @Disabled
+    @DisplayName("Успешная авторизация без specs возвращает access и refresh токены")
     public void successfulLoginTest(){
         LoginBodyModel loginData = new LoginBodyModel(username, password);
 
@@ -51,6 +53,7 @@ public class LoginTests_without_specs extends TestBase {
 
     @Test
     @Disabled
+    @DisplayName("Авторизация с неверным паролем без specs возвращает ошибку")
     public void wrongCredentialsLoginTest(){
         LoginBodyModel loginData = new LoginBodyModel(username, wrongPassword);
 

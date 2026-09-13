@@ -5,6 +5,7 @@ import models.login.LoginValidationErrorResponseModel;
 import models.login.SuccessfulLoginResponseModel;
 import models.login.WrongCredentialsLoginResponseModel;
 import models.registration.RegistrationBodyModel;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static io.qameta.allure.Allure.step;
@@ -14,6 +15,7 @@ import static tests.TestData.*;
 public class LoginTests extends TestBase {
 
     @Test
+    @DisplayName("Пользователь успешно авторизуется и получает access и refresh токены")
     public void successfulLoginTest() {
         String username = "user_" + System.currentTimeMillis();
         String password = "pass_" + System.currentTimeMillis();
@@ -33,6 +35,7 @@ public class LoginTests extends TestBase {
     }
 
     @Test
+    @DisplayName("Авторизация отклоняется при неверном пароле")
     public void wrongCredentialsLoginTest() {
         LoginBodyModel loginData = new LoginBodyModel(LOGIN_USERNAME, LOGIN_WRONG_PASSWORD);
 
@@ -44,6 +47,7 @@ public class LoginTests extends TestBase {
     }
 
     @Test
+    @DisplayName("Авторизация отклоняется при несуществующем username")
     public void wrongUsernameLoginTest() {
         LoginBodyModel loginData = new LoginBodyModel(LOGIN_WRONG_USERNAME, LOGIN_PASSWORD);
 
@@ -55,6 +59,7 @@ public class LoginTests extends TestBase {
     }
 
     @Test
+    @DisplayName("Авторизация без username возвращает ошибку валидации")
     public void emptyUsernameLoginTest() {
         LoginBodyModel loginData = new LoginBodyModel("", LOGIN_PASSWORD);
 
@@ -66,6 +71,7 @@ public class LoginTests extends TestBase {
     }
 
     @Test
+    @DisplayName("Авторизация без password возвращает ошибку валидации")
     public void emptyPasswordLoginTest() {
         LoginBodyModel loginData = new LoginBodyModel(LOGIN_USERNAME, "");
 

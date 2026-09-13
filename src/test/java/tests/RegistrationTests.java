@@ -5,6 +5,7 @@ import models.registration.RegistrationBodyModel;
 import models.registration.RegistrationValidationErrorResponseModel;
 import models.registration.SuccessfulRegistrationResponseModel;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static io.qameta.allure.Allure.step;
@@ -26,6 +27,7 @@ public class RegistrationTests extends TestBase {
     }
 
     @Test
+    @DisplayName("Новый пользователь успешно регистрируется")
     public void successfulRegistrationTest() {
         RegistrationBodyModel registrationData = new RegistrationBodyModel(username, password);
 
@@ -43,6 +45,7 @@ public class RegistrationTests extends TestBase {
     }
 
     @Test
+    @DisplayName("Повторная регистрация с тем же username отклоняется")
     public void existingUserWrongRegistrationTest() {
         RegistrationBodyModel registrationData = new RegistrationBodyModel(username, password);
 
@@ -63,6 +66,7 @@ public class RegistrationTests extends TestBase {
     }
 
     @Test
+    @DisplayName("Регистрация без username возвращает ошибку валидации")
     public void emptyUsernameRegistrationTest() {
         RegistrationBodyModel registrationData = new RegistrationBodyModel("", password);
 
@@ -74,6 +78,7 @@ public class RegistrationTests extends TestBase {
     }
 
     @Test
+    @DisplayName("Регистрация без password возвращает ошибку валидации")
     public void emptyPasswordRegistrationTest() {
         RegistrationBodyModel registrationData = new RegistrationBodyModel(username, "");
 
@@ -85,6 +90,7 @@ public class RegistrationTests extends TestBase {
     }
 
     @Test
+    @DisplayName("Регистрация без username и password возвращает ошибки валидации")
     public void emptyUsernameAndPasswordRegistrationTest() {
         RegistrationBodyModel registrationData = new RegistrationBodyModel("", "");
 

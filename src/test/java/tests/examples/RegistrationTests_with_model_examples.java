@@ -10,6 +10,7 @@ import models.registration.model_examples.records.RegistrationResponseRecordsMod
 import net.datafaker.Faker;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static io.restassured.RestAssured.given;
@@ -32,6 +33,7 @@ public class RegistrationTests_with_model_examples {
 
     @Test
     @Disabled
+    @DisplayName("Регистрация с сырым JSON в теле запроса")
     public void successfulRegistrationTest_bad_practice(){
         // move to model
         String data = "{\"username\": \"" + username + "\",\"password\": \"" + password + "\"}";
@@ -52,6 +54,7 @@ public class RegistrationTests_with_model_examples {
 
     @Test
     @Disabled
+    @DisplayName("Успешная регистрация с POJO-моделью")
     public void successfulRegistrationTest_with_pojo(){
         RegistrationBodyPojoModel data = new RegistrationBodyPojoModel();
         data.setUsername(username);
@@ -76,6 +79,7 @@ public class RegistrationTests_with_model_examples {
 
     @Test
     @Disabled
+    @DisplayName("Успешная регистрация с Lombok-моделью")
     public void successfulRegistrationTest_with_lombok(){
         RegistrationBodyLombokModel data = new RegistrationBodyLombokModel();
         data.setUsername(username);
@@ -100,6 +104,7 @@ public class RegistrationTests_with_model_examples {
 
     @Test
     @Disabled
+    @DisplayName("Успешная регистрация с record-моделью")
     public void successfulRegistrationTest_with_records(){
         RegistrationBodyRecordsModel data = new RegistrationBodyRecordsModel(username, password);
 
@@ -120,6 +125,7 @@ public class RegistrationTests_with_model_examples {
 
     @Test
     @Disabled
+    @DisplayName("Повторная регистрация существующего пользователя возвращает 400")
     public void existingUser400Test(){
         RegistrationBodyRecordsModel data = new RegistrationBodyRecordsModel(username, password);
 
@@ -153,6 +159,7 @@ public class RegistrationTests_with_model_examples {
 
     @Test
     @Disabled
+    @DisplayName("Пример негативной регистрации с невалидным username")
     public void invalidUsername400Test(){
         String data = "{\"username\": \"" + username + "\",\"password\": \"" + password + "\"}";
 
@@ -172,6 +179,7 @@ public class RegistrationTests_with_model_examples {
 
     @Test
     @Disabled
+    @DisplayName("Пример регистрации без заголовка Content-Type")
     public void unsupportedMediaType415Test(){
         String data = "{\"username\": \"" + username + "\",\"password\": \"" + password + "\"}";
 
@@ -187,6 +195,7 @@ public class RegistrationTests_with_model_examples {
 
     @Test
     @Disabled
+    @DisplayName("Пример негативной регистрации без Content-Type")
     public void negativeRegistration500Test(){
         String data = "{\"username\": \"" + username + "\",\"password\": \"" + password + "\"}";
 

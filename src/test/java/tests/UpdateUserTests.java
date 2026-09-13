@@ -9,6 +9,7 @@ import models.updateuser.UpdateUserFirstNameBodyModel;
 import models.updateuser.UpdateUserInvalidTokenResponseModel;
 import models.updateuser.UpdateUserPutUsernameOnlyBodyModel;
 import models.updateuser.UpdateUserValidationErrorResponseModel;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static io.qameta.allure.Allure.step;
@@ -21,6 +22,7 @@ import static tests.TestData.UPDATE_USER_INVALID_TOKEN_ERROR;
 public class UpdateUserTests extends TestBase {
 
     @Test
+    @DisplayName("Авторизованный пользователь успешно обновляет профиль")
     public void successfulUpdateUserTest() {
         String username = "user_" + System.currentTimeMillis();
         String password = "pass_" + System.currentTimeMillis();
@@ -48,6 +50,7 @@ public class UpdateUserTests extends TestBase {
     }
 
     @Test
+    @DisplayName("Авторизованный пользователь частично обновляет профиль")
     public void successfulPartialUpdateUserTest() {
         String username = "user_" + System.currentTimeMillis();
         String password = "pass_" + System.currentTimeMillis();
@@ -73,6 +76,7 @@ public class UpdateUserTests extends TestBase {
     }
 
     @Test
+    @DisplayName("Обновление профиля без токена отклоняется")
     public void updateUserWithoutTokenTest() {
         UpdateUserBodyModel updateData =
                 new UpdateUserBodyModel("Ivan", "Petrov", "ivan.petrov@example.com");
@@ -85,6 +89,7 @@ public class UpdateUserTests extends TestBase {
     }
 
     @Test
+    @DisplayName("Обновление профиля с некорректным токеном отклоняется")
     public void updateUserWithInvalidTokenTest() {
         UpdateUserBodyModel updateData =
                 new UpdateUserBodyModel("Ivan", "Petrov", "ivan.petrov@example.com");
@@ -99,6 +104,7 @@ public class UpdateUserTests extends TestBase {
     }
 
     @Test
+    @DisplayName("PUT с неполным телом возвращает ошибки обязательных полей")
     public void replaceUserWithPartialBodyTest() {
         String username = "user_" + System.currentTimeMillis();
         String password = "pass_" + System.currentTimeMillis();

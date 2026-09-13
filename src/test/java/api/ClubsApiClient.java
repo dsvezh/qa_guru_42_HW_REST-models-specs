@@ -114,7 +114,7 @@ public class ClubsApiClient {
                 .as(ClubReviewValidationErrorResponseModel.class);
     }
 
-    @Step("Обновление отзыва о клубе PUT /clubs/reviews/{id}/")
+    @Step("Обновление отзыва о клубе PUT /clubs/reviews/{reviewId}/")
     public ClubReviewModel updateClubReview(
             String accessToken, Integer reviewId, ClubReviewBodyModel body) {
         return given(authorizedClubsRequestSpec(accessToken))
@@ -127,7 +127,7 @@ public class ClubsApiClient {
                 .as(ClubReviewModel.class);
     }
 
-    @Step("Обновление отзыва о клубе без токена PUT /clubs/reviews/{id}/")
+    @Step("Обновление отзыва о клубе без токена PUT /clubs/reviews/{reviewId}/")
     public WrongCredentialsLoginResponseModel updateClubReviewWithoutToken(
             Integer reviewId, ClubReviewBodyModel body) {
         return given(baseRequestSpec)
@@ -140,7 +140,7 @@ public class ClubsApiClient {
                 .as(WrongCredentialsLoginResponseModel.class);
     }
 
-    @Step("Обновление чужого отзыва о клубе PUT /clubs/reviews/{id}/")
+    @Step("Обновление чужого отзыва о клубе PUT /clubs/reviews/{reviewId}/")
     public WrongCredentialsLoginResponseModel updateAnotherUsersClubReview(
             String accessToken, Integer reviewId, ClubReviewBodyModel body) {
         return given(authorizedClubsRequestSpec(accessToken))
@@ -153,7 +153,7 @@ public class ClubsApiClient {
                 .as(WrongCredentialsLoginResponseModel.class);
     }
 
-    @Step("Обновление отзыва о клубе с ошибкой валидации PUT /clubs/reviews/{id}/")
+    @Step("Обновление отзыва о клубе с ошибкой валидации PUT /clubs/reviews/{reviewId}/")
     public ClubReviewValidationErrorResponseModel updateClubReviewWithValidationError(
             String accessToken, Integer reviewId, ClubReviewBodyModel body) {
         return given(authorizedClubsRequestSpec(accessToken))
@@ -166,7 +166,7 @@ public class ClubsApiClient {
                 .as(ClubReviewValidationErrorResponseModel.class);
     }
 
-    @Step("Удаление отзыва о клубе DELETE /clubs/reviews/{id}/")
+    @Step("Удаление отзыва о клубе DELETE /clubs/reviews/{reviewId}/")
     public void deleteClubReview(String accessToken, Integer reviewId) {
         given(authorizedClubsRequestSpec(accessToken))
                 .when()
@@ -175,7 +175,7 @@ public class ClubsApiClient {
                 .spec(successfulDeleteClubReviewResponseSpec);
     }
 
-    @Step("Удаление отзыва о клубе без токена DELETE /clubs/reviews/{id}/")
+    @Step("Удаление отзыва о клубе без токена DELETE /clubs/reviews/{reviewId}/")
     public WrongCredentialsLoginResponseModel deleteClubReviewWithoutToken(Integer reviewId) {
         return given(baseRequestSpec)
                 .when()
@@ -186,7 +186,7 @@ public class ClubsApiClient {
                 .as(WrongCredentialsLoginResponseModel.class);
     }
 
-    @Step("Удаление чужого отзыва о клубе DELETE /clubs/reviews/{id}/")
+    @Step("Удаление чужого отзыва о клубе DELETE /clubs/reviews/{reviewId}/")
     public WrongCredentialsLoginResponseModel deleteAnotherUsersClubReview(
             String accessToken, Integer reviewId) {
         return given(authorizedClubsRequestSpec(accessToken))
@@ -198,7 +198,7 @@ public class ClubsApiClient {
                 .as(WrongCredentialsLoginResponseModel.class);
     }
 
-    @Step("Удаление несуществующего отзыва о клубе DELETE /clubs/reviews/{id}/")
+    @Step("Удаление несуществующего отзыва о клубе DELETE /clubs/reviews/{reviewId}/")
     public WrongCredentialsLoginResponseModel deleteNonExistentClubReview(
             String accessToken, Integer reviewId) {
         return given(authorizedClubsRequestSpec(accessToken))
@@ -247,7 +247,7 @@ public class ClubsApiClient {
                 .as(ClubValidationErrorResponseModel.class);
     }
 
-    @Step("Обновление клуба PUT /clubs/{id}/")
+    @Step("Обновление клуба PUT /clubs/{clubId}/")
     public ClubModel updateClub(String accessToken, Integer clubId, ClubBodyModel body) {
         return given(authorizedClubsRequestSpec(accessToken))
                 .body(body)
@@ -259,7 +259,7 @@ public class ClubsApiClient {
                 .as(ClubModel.class);
     }
 
-    @Step("Обновление клуба без токена PUT /clubs/{id}/")
+    @Step("Обновление клуба без токена PUT /clubs/{clubId}/")
     public WrongCredentialsLoginResponseModel updateClubWithoutToken(
             Integer clubId, ClubBodyModel body) {
         return given(baseRequestSpec)
@@ -272,7 +272,7 @@ public class ClubsApiClient {
                 .as(WrongCredentialsLoginResponseModel.class);
     }
 
-    @Step("Обновление клуба с ошибкой валидации PUT /clubs/{id}/")
+    @Step("Обновление клуба с ошибкой валидации PUT /clubs/{clubId}/")
     public ClubValidationErrorResponseModel updateClubWithValidationError(
             String accessToken, Integer clubId, ClubWithoutBookTitleBodyModel body) {
         return given(authorizedClubsRequestSpec(accessToken))

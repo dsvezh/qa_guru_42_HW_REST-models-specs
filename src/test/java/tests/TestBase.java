@@ -9,6 +9,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 
+import static com.codeborne.selenide.Configuration.baseUrl;
+import static com.codeborne.selenide.Configuration.browserSize;
 import static com.codeborne.selenide.Selenide.closeWebDriver;
 import static com.codeborne.selenide.WebDriverRunner.hasWebDriverStarted;
 
@@ -19,6 +21,8 @@ public class TestBase {
     @BeforeAll
     public static void setUp() {
         RestAssured.baseURI = "https://book-club.qa.guru";
+        baseUrl = "https://book-club.qa.guru";
+        browserSize = "1920x1080";
     }
 
     @BeforeEach

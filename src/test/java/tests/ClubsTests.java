@@ -8,6 +8,7 @@ import models.clubs.ClubsListResponseModel;
 import models.login.LoginBodyModel;
 import models.login.WrongCredentialsLoginResponseModel;
 import models.registration.RegistrationBodyModel;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static io.qameta.allure.Allure.step;
@@ -19,6 +20,7 @@ import static tests.TestData.UNAUTHORIZED_ERROR;
 public class ClubsTests extends TestBase {
 
     @Test
+    @DisplayName("Список клубов возвращает валидную структуру")
     public void getClubsReturns200AndValidStructure() {
         ClubsListResponseModel response = api.clubs.getClubs();
 
@@ -36,6 +38,7 @@ public class ClubsTests extends TestBase {
     }
 
     @Test
+    @DisplayName("Пагинация отдаёт ссылку next, если клубов больше одной страницы")
     public void getClubsPaginationWhenTotalExceedsPageSize() {
         ClubsListResponseModel response = api.clubs.getClubs();
 
@@ -53,6 +56,7 @@ public class ClubsTests extends TestBase {
     }
 
     @Test
+    @DisplayName("Каждый клуб в списке содержит обязательные поля")
     public void getClubsEachClubHasRequiredFields() {
         ClubsListResponseModel response = api.clubs.getClubs();
 
@@ -73,6 +77,7 @@ public class ClubsTests extends TestBase {
     }
 
     @Test
+    @DisplayName("В ответе списка клубов присутствуют поля пагинации")
     public void getClubsPaginationFieldsPresent() {
         ClubsListResponseModel response = api.clubs.getClubs();
 
@@ -84,6 +89,7 @@ public class ClubsTests extends TestBase {
     }
 
     @Test
+    @DisplayName("Авторизованный пользователь успешно создаёт клуб")
     public void successfulCreateClubTest() {
         String username = "user_" + System.currentTimeMillis();
         String password = "pass_" + System.currentTimeMillis();
@@ -118,6 +124,7 @@ public class ClubsTests extends TestBase {
     }
 
     @Test
+    @DisplayName("Клуб успешно создаётся с граничными значениями полей")
     public void createClubWithBoundaryValuesTest() {
         String username = "user_" + System.currentTimeMillis();
         String password = "pass_" + System.currentTimeMillis();
@@ -148,6 +155,7 @@ public class ClubsTests extends TestBase {
     }
 
     @Test
+    @DisplayName("Создание клуба без токена отклоняется")
     public void createClubWithoutTokenTest() {
         ClubBodyModel clubData = new ClubBodyModel(
                 "Unauthorized club",
@@ -164,6 +172,7 @@ public class ClubsTests extends TestBase {
     }
 
     @Test
+    @DisplayName("Создание клуба без названия книги возвращает ошибку валидации")
     public void createClubWithoutBookTitleTest() {
         String username = "user_" + System.currentTimeMillis();
         String password = "pass_" + System.currentTimeMillis();
@@ -187,6 +196,7 @@ public class ClubsTests extends TestBase {
     }
 
     @Test
+    @DisplayName("Авторизованный пользователь успешно обновляет клуб")
     public void successfulUpdateClubTest() {
         String username = "user_" + System.currentTimeMillis();
         String password = "pass_" + System.currentTimeMillis();
@@ -227,6 +237,7 @@ public class ClubsTests extends TestBase {
     }
 
     @Test
+    @DisplayName("Клуб успешно обновляется граничными значениями полей")
     public void updateClubWithBoundaryValuesTest() {
         String username = "user_" + System.currentTimeMillis();
         String password = "pass_" + System.currentTimeMillis();
@@ -265,6 +276,7 @@ public class ClubsTests extends TestBase {
     }
 
     @Test
+    @DisplayName("Обновление клуба без токена отклоняется")
     public void updateClubWithoutTokenTest() {
         String username = "user_" + System.currentTimeMillis();
         String password = "pass_" + System.currentTimeMillis();
@@ -297,6 +309,7 @@ public class ClubsTests extends TestBase {
     }
 
     @Test
+    @DisplayName("Обновление клуба без названия книги возвращает ошибку валидации")
     public void updateClubWithoutBookTitleTest() {
         String username = "user_" + System.currentTimeMillis();
         String password = "pass_" + System.currentTimeMillis();
@@ -329,6 +342,7 @@ public class ClubsTests extends TestBase {
     }
 
     @Test
+    @DisplayName("Авторизованный пользователь успешно удаляет клуб")
     public void successfulDeleteClubTest() {
         String username = "user_" + System.currentTimeMillis();
         String password = "pass_" + System.currentTimeMillis();
@@ -349,6 +363,7 @@ public class ClubsTests extends TestBase {
     }
 
     @Test
+    @DisplayName("Клуб с граничными значениями полей успешно удаляется")
     public void deleteClubWithBoundaryValuesTest() {
         String username = "user_" + System.currentTimeMillis();
         String password = "pass_" + System.currentTimeMillis();
@@ -370,6 +385,7 @@ public class ClubsTests extends TestBase {
     }
 
     @Test
+    @DisplayName("Удаление клуба без токена отклоняется")
     public void deleteClubWithoutTokenTest() {
         String username = "user_" + System.currentTimeMillis();
         String password = "pass_" + System.currentTimeMillis();
@@ -396,6 +412,7 @@ public class ClubsTests extends TestBase {
     }
 
     @Test
+    @DisplayName("Удаление несуществующего клуба возвращает ошибку")
     public void deleteNonExistentClubTest() {
         String username = "user_" + System.currentTimeMillis();
         String password = "pass_" + System.currentTimeMillis();

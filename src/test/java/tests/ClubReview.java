@@ -9,6 +9,7 @@ import models.clubs.ClubReviewsListResponseModel;
 import models.login.LoginBodyModel;
 import models.login.WrongCredentialsLoginResponseModel;
 import models.registration.RegistrationBodyModel;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static io.qameta.allure.Allure.step;
@@ -22,6 +23,7 @@ import static tests.TestData.UNAUTHORIZED_ERROR;
 public class ClubReview extends TestBase {
 
     @Test
+    @DisplayName("Список отзывов возвращает валидную структуру")
     public void getClubReviewsReturns200AndValidStructure() {
         ClubReviewsListResponseModel response = api.clubs.getClubReviews();
 
@@ -39,6 +41,7 @@ public class ClubReview extends TestBase {
     }
 
     @Test
+    @DisplayName("Каждый отзыв в списке содержит обязательные поля")
     public void getClubReviewsEachReviewHasRequiredFields() {
         ClubReviewsListResponseModel response = api.clubs.getClubReviews();
 
@@ -58,6 +61,7 @@ public class ClubReview extends TestBase {
     }
 
     @Test
+    @DisplayName("Запрос отзывов с нулевой страницей возвращает ошибку")
     public void getClubReviewsWithZeroPageTest() {
         WrongCredentialsLoginResponseModel response =
                 api.clubs.getClubReviewsWithInvalidPage("0");
@@ -67,6 +71,7 @@ public class ClubReview extends TestBase {
     }
 
     @Test
+    @DisplayName("Запрос отзывов с нечисловой страницей возвращает ошибку")
     public void getClubReviewsWithNonNumericPageTest() {
         WrongCredentialsLoginResponseModel response =
                 api.clubs.getClubReviewsWithInvalidPage("abc");
@@ -76,6 +81,7 @@ public class ClubReview extends TestBase {
     }
 
     @Test
+    @DisplayName("Авторизованный пользователь успешно создаёт отзыв")
     public void successfulCreateClubReviewTest() {
         String username = "user_" + System.currentTimeMillis();
         String password = "pass_" + System.currentTimeMillis();
@@ -112,6 +118,7 @@ public class ClubReview extends TestBase {
     }
 
     @Test
+    @DisplayName("Отзыв успешно создаётся с минимальными граничными значениями")
     public void createClubReviewWithMinimumBoundaryValuesTest() {
         String username = "user_" + System.currentTimeMillis();
         String password = "pass_" + System.currentTimeMillis();
@@ -145,6 +152,7 @@ public class ClubReview extends TestBase {
     }
 
     @Test
+    @DisplayName("Создание отзыва без токена отклоняется")
     public void createClubReviewWithoutTokenTest() {
         ClubReviewBodyModel reviewData =
                 new ClubReviewBodyModel(Integer.MAX_VALUE, "Unauthorized review", 5, 100);
@@ -158,6 +166,7 @@ public class ClubReview extends TestBase {
     }
 
     @Test
+    @DisplayName("Создание отзыва с оценкой выше максимума возвращает ошибку валидации")
     public void createClubReviewWithAssessmentAboveMaximumTest() {
         String username = "user_" + System.currentTimeMillis();
         String password = "pass_" + System.currentTimeMillis();
@@ -187,6 +196,7 @@ public class ClubReview extends TestBase {
     }
 
     @Test
+    @DisplayName("Авторизованный пользователь успешно обновляет свой отзыв")
     public void successfulUpdateClubReviewTest() {
         String username = "user_" + System.currentTimeMillis();
         String password = "pass_" + System.currentTimeMillis();
@@ -230,6 +240,7 @@ public class ClubReview extends TestBase {
     }
 
     @Test
+    @DisplayName("Отзыв успешно обновляется минимальными граничными значениями")
     public void updateClubReviewWithMinimumBoundaryValuesTest() {
         String username = "user_" + System.currentTimeMillis();
         String password = "pass_" + System.currentTimeMillis();
@@ -268,6 +279,7 @@ public class ClubReview extends TestBase {
     }
 
     @Test
+    @DisplayName("Обновление отзыва без токена отклоняется")
     public void updateClubReviewWithoutTokenTest() {
         String username = "user_" + System.currentTimeMillis();
         String password = "pass_" + System.currentTimeMillis();
@@ -302,6 +314,7 @@ public class ClubReview extends TestBase {
     }
 
     @Test
+    @DisplayName("Обновление чужого отзыва запрещено")
     public void updateAnotherUsersClubReviewForbiddenTest() {
         String uniqueSuffix = String.valueOf(System.nanoTime());
         String ownerUsername = "review_owner_" + uniqueSuffix;
@@ -339,6 +352,7 @@ public class ClubReview extends TestBase {
     }
 
     @Test
+    @DisplayName("Обновление отзыва с оценкой выше максимума возвращает ошибку валидации")
     public void updateClubReviewWithAssessmentAboveMaximumTest() {
         String username = "user_" + System.currentTimeMillis();
         String password = "pass_" + System.currentTimeMillis();
@@ -374,6 +388,7 @@ public class ClubReview extends TestBase {
     }
 
     @Test
+    @DisplayName("Авторизованный пользователь успешно удаляет свой отзыв")
     public void successfulDeleteClubReviewTest() {
         String username = "user_" + System.currentTimeMillis();
         String password = "pass_" + System.currentTimeMillis();
@@ -401,6 +416,7 @@ public class ClubReview extends TestBase {
     }
 
     @Test
+    @DisplayName("Удаление отзыва без токена отклоняется")
     public void deleteClubReviewWithoutTokenTest() {
         String username = "user_" + System.currentTimeMillis();
         String password = "pass_" + System.currentTimeMillis();
@@ -433,6 +449,7 @@ public class ClubReview extends TestBase {
     }
 
     @Test
+    @DisplayName("Удаление чужого отзыва запрещено")
     public void deleteAnotherUsersClubReviewForbiddenTest() {
         String uniqueSuffix = String.valueOf(System.nanoTime());
         String ownerUsername = "review_owner_" + uniqueSuffix;
@@ -467,6 +484,7 @@ public class ClubReview extends TestBase {
     }
 
     @Test
+    @DisplayName("Удаление несуществующего отзыва возвращает ошибку")
     public void deleteNonExistentClubReviewTest() {
         String username = "user_" + System.currentTimeMillis();
         String password = "pass_" + System.currentTimeMillis();
