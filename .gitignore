@@ -1,6 +1,5 @@
 HELP.md
 build/
-gradle/
 !**/src/main/**
 !**/src/test/**
 
